@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crear Bus</title>
+</head>
+<body>
+    <h1>Crear Bus</h1>
+    <form method="POST" action="/buses/create/">
+        {% csrf_token %}
+        <label for="patente">Patente:</label>
+        <input type="text" name="patente" id="patente" required>
+        <br>
+        <label for="cantidadAsientos">Cantidad de Asientos:</label>
+        <input type="number" name="cantidadAsientos" id="cantidadAsientos" required>
+        <br>
+        <button type="submit">Crear</button>
+    </form>
+    <a href="/buses/">Volver a la lista de buses</a>
+</body>
+</html>
