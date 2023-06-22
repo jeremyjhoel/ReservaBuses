@@ -101,20 +101,6 @@ def destino_list(request):
     return render(request, 'destinos/destino_list.html', context)
 
 
-class BusListView(ListView):
-    model = Bus
-    template_name = 'buses/bus_list.html'
-    context_object_name = 'buses'
-    success_url = '/buses/'
-
-
-class BusCreateView(CreateView):
-    model = Bus
-    form_class = BusForm
-    template_name = 'buses/bus_create.html'
-    success_url = '/buses/'
-
-
 class BusUpdateView(UpdateView):
     model = Bus
     form_class = BusForm
@@ -167,20 +153,6 @@ class RutaDeleteView(DeleteView):
     success_url = '/rutas/'
 
 # Esto para los destinos
-
-
-class DestinoListView(ListView):
-    model = Destino
-    template_name = 'destinos/destino_list.html'
-    context_object_name = 'destinos'
-    success_url = '/destinos/'
-
-
-class DestinoCreateView(CreateView):
-    model = Destino
-    form_class = DestinoForm
-    template_name = 'destinos/destino_create.html'
-    success_url = '/destinos/'
 
 
 class DestinoUpdateView(UpdateView):

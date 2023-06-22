@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from Reservar.views import BusListView, BusCreateView, BusUpdateView, BusDeleteView
+from Reservar.views import BusUpdateView, BusDeleteView
 from Reservar.views import index
 from Reservar.views import RutaListView, RutaCreateView, RutaUpdateView, RutaDeleteView, busCreate, bus_list, destino_list, destinoCreate
+from Reservar.views import busCreate, bus_list, destino_list, destinoCreate, DestinoDeleteView, DestinoUpdateView
 
 app_name = 'Reservar'
 
@@ -36,6 +37,11 @@ urlpatterns = [
 
     path('destinos/', destino_list, name='destino_list'),
     path('destinos/create/', destinoCreate, name='destino_create'),
+    path('destinos/update/<int:pk>/',
+         DestinoUpdateView.as_view(), name='destino_update'),
+    path('destinos/delete/<int:pk>/',
+         DestinoDeleteView.as_view(), name='destino_delete'),
+
 
     path('rutas/', RutaListView.as_view(), name='ruta_list'),
     path('rutas/create/', RutaCreateView.as_view(), name='ruta_create'),

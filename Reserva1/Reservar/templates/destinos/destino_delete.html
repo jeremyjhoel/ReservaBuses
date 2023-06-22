@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eliminar Destino</title>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Eliminar Destino</h1>
+        <p>¿Estás seguro de que deseas eliminar el destino <strong>"{{ destino }}"</strong>?</p>
+        <form method="POST" action="/destinos/delete/{{ destino.id }}/" onsubmit="return confirmarEliminacion()">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+        <br>
+        <a href="/destinos/" class="btn btn-secondary">Volver a la lista de destinos</a>
+    </div>
+
+    <script>
+        function confirmarEliminacion() {
+            return confirm("¿Estás seguro de que deseas eliminar el destino?");
+        }
+    </script>
+</body>
+
+</html>
+
+{% endblock %}

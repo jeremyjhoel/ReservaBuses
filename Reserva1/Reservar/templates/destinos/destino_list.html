@@ -24,7 +24,7 @@
                 <tr>
                     <td>{{ destino.ciudadDestino }}</td>
                     <td>
-                        <form method="POST" action="/destinos/delete/{{ destino.id }}/" style="display: inline;">
+                        <form method="GET" action="/destinos/delete/{{ destino.id }}/" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Eliminar</button>
                         </form>

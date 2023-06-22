@@ -27,7 +27,7 @@
                     <td>{{ bus.patente }}</td>
                     <td>{{ bus.cantidadAsientos }}</td>
                     <td>
-                        <form method="POST" action="/buses/delete/{{ bus.id }}/" style="display: inline;">
+                        <form method="GET" action="/buses/delete/{{ bus.id }}/" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Eliminar</button>
                         </form>
