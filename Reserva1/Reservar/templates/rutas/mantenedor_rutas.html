@@ -1,0 +1,43 @@
+<!-- mantenedor_rutas.html -->
+
+<h1>Mantenedor de Rutas</h1>
+
+<!-- Formulario para agregar un nuevo ruta -->
+<form method="POST">
+    {% csrf_token %}
+    {{ ruta_form.as_p }}
+    <button type="submit">Agregar Ruta</button>
+</form>
+
+<!-- Lista de buses -->
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>TiempoEstimado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ruta in rutas %}
+        <tr>
+            <td>{{ ruta.id }}</td>
+            <td>{{ ruta.origen }}</td>
+            <td>{{ ruta.destino }}</td>
+            <td>{{ ruta.tiempoEstimado }}</td>
+            <td>
+                <!-- Botón para actualizar una ruta -->
+                <a href="{% url 'ruta_update' ruta.id %}">Editar</a>
+
+                <!-- Botón para eliminar un ruta -->
+                <form method="POST" action="{% url 'ruta_delete' ruta.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lista de Buses</title>
+</head>
+
+<body>
+    <h1>Lista de Buses</h1>
+    <ul>
+        {% for ruta in rutas %}
+        <li>{{ ruta.origen }} - {{ ruta.destino }} - {{ ruta.tiempoEstimado }}
+            <form method="POST" action="/rutas/delete/{{ ruta.id }}/" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Eliminar</button>
+            </form>
+            <a href="/rutas/update/{{ ruta.id }}/">Editar</a>
+        </li>
+        {% empty %}
+        <li>No hay rutas disponibles</li>
+        {% endfor %}
+    </ul>
+    <a href="/rutas/create/">Crear nueva ruta</a>
+</body>
+
+</html>

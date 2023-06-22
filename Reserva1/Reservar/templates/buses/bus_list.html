@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lista de Buses</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+</head>
+
+<body>
+    <div class="container">
+        <h1>Lista de Buses</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Patente</th>
+                    <th>Cantidad de Asientos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bus in buses %}
+                <tr>
+                    <td>{{ bus.patente }}</td>
+                    <td>{{ bus.cantidadAsientos }}</td>
+                    <td>
+                        <form method="POST" action="/buses/delete/{{ bus.id }}/" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                        <a href="/buses/update/{{ bus.id }}" class="btn btn-primary">Editar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">No hay buses disponibles</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/buses/create/" class="btn btn-success">Crear nuevo bus</a>
+    </div>
+</body>
+
+</html>
+
+{% endblock %}

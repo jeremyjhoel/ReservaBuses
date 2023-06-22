@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Crear Ruta</title>
+</head>
+
+<body>
+    <h1>Crear Ruta</h1>
+    <form method="POST" action="/rutas/create/">
+        {% csrf_token %}
+        <label for="origen">Origen:</label>
+        <input type="text" name="origen" id="origen" required>
+        <br>
+        <label for="destino">Destino:</label>
+        <input type="text" name="destino" id="destino" required>
+        <br>
+        <label for="tiempoEstimado">Tiempo estimado:</label>
+        <input type="time" name="tiempoEstimado" id="tiempoEstimado" required>
+        <br>
+        <button type="submit">Crear</button>
+    </form>
+    <a href="/rutas/">Volver a la lista de rutas</a>
+</body>
+
+</html>

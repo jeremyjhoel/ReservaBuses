@@ -1,0 +1,57 @@
+from django.db import models
+
+class Cliente(models.Model):
+    nombre = models.CharField(max_length=100, null=False)
+    apellido = models.CharField(max_length=100, null=False)
+    email = models.EmailField(max_length=100, null=False)
+    telefono = models.CharField(max_length=20, blank=True)
+    rut = models.CharField(max_length=200, null=False)
+
+class Ruta(models.Model):
+    origen = models.CharField(max_length=100)
+    destino = models.CharField(max_length=100)
+    tiempoEstimado = models.CharField(max_length=100)
+
+    def _str_(self):
+        return self.destino
+
+
+class Reserva(models.Model):
+    fechaReserva=models.DateTimeField(null=False)
+    cantidadPasajes = models.IntegerField(null=False)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE)
+    def _str_(self):
+        return self.fechaReserva
+class Ruta(models.Model):
+    origen = models.CharField(max_length=100)
+    destino = models.CharField(max_length=100)
+    tiempoEstimado = models.CharField(max_length=100)
+
+    def _str_(self):
+        return self.destino
+
+
+class Disponibilidad(models.Model):
+    horario = models.CharField(max_length=100)
+    fechaReserva = models.DateField()
+    disponibilidadId = models.CharField(max_length=100)
+
+    def _str_(self):
+        return self.horario
+
+
+class Asientos(models.Model):
+    estado = models.BooleanField()
+
+    def _str_(self):
+        return self.estado
+
+class Bus(models.Model):
+    cantidadAsientos = models.IntegerField()
+    busId = models.CharField(max_length=100)
+
+    def _str_(self):
+        return self.busId
+
+# Create your models here.
