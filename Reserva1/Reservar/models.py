@@ -34,7 +34,7 @@ class Ruta(models.Model):
     tiempoEstimado = models.TimeField(verbose_name='Tiempo estimado')
 
     def __str__(self):
-        return self.ciudadD
+        return self.ciudadD.ciudadDestino
 
 
 class Bus(models.Model):

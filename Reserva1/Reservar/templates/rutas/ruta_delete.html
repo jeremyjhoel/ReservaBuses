@@ -26,19 +26,6 @@
 
 
 
-    <h1>Eliminar Ruta</h1>
-
-    <p>¿Estás seguro de que quieres eliminar la siguiente ruta?</p>
-    <p>Destino: {{ ruta.destino }}</p>
-    <p>Origen: {{ ruta.origen }}</p>
-    <p>Tiempo de espera: {{ ruta.tiempo_espera }}</p>
-
-    <form method="POST" action="{% url 'ruta_delete' ruta_id %}" class="my-4">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Eliminar</button>
-    </form>
-
-    <a class="btn btn-secondary" href="{% url 'ruta_list' %}">Volver al Listado</a>
 </body>
 
 
