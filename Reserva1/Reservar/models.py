@@ -29,12 +29,12 @@ class Destino(models.Model):
 
 
 class Ruta(models.Model):
-    ciudadOrigen = models.ForeignKey(Origen, on_delete=models.CASCADE)
-    ciudadDestino = models.ForeignKey(Destino, on_delete=models.CASCADE)
-    tiempoEstimado = models.CharField(max_length=100)
+    ciudadO = models.ForeignKey(Origen, on_delete=models.CASCADE)
+    ciudadD = models.ForeignKey(Destino, on_delete=models.CASCADE)
+    tiempoEstimado = models.TimeField(verbose_name='Tiempo estimado')
 
     def __str__(self):
-        return self.ciudadDestino
+        return self.ciudadD
 
 
 class Bus(models.Model):

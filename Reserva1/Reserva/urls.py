@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from Reservar.views import BusUpdateView, BusDeleteView
 from Reservar.views import index
-from Reservar.views import RutaListView, RutaCreateView, RutaUpdateView, RutaDeleteView, busCreate, bus_list, destino_list, destinoCreate
-from Reservar.views import busCreate, bus_list, destino_list, destinoCreate, DestinoDeleteView, DestinoUpdateView
+from Reservar.views import busCreate, bus_list, BusUpdateView, BusDeleteView
+from Reservar.views import RutaListView, RutaCreateView, RutaUpdateView, RutaDeleteView
+from Reservar.views import destino_list, destinoCreate, DestinoDeleteView, DestinoUpdateView
+from Reservar.views import origen_list, origenCreate, OrigenDeleteView, OrigenUpdateView, rutaLista, rutaCreacion, rutaBorrar, rutaEdit
 
 app_name = 'Reservar'
 
@@ -27,8 +28,6 @@ urlpatterns = [
     path('index/', index, name='index'),
     path('', index, name='index'),
     path("accounts/", include("django.contrib.auth.urls"), name='logout'),
-
-
 
     path('buses/', bus_list, name='bus_list'),
     path('buses/create/', busCreate, name='bus_create'),
@@ -42,9 +41,15 @@ urlpatterns = [
     path('destinos/delete/<int:pk>/',
          DestinoDeleteView.as_view(), name='destino_delete'),
 
+    path('origenes/', origen_list, name='origen_list'),
+    path('origenes/create/', origenCreate, name='origen_create'),
+    path('origenes/update/<int:pk>/',
+         OrigenUpdateView.as_view(), name='origen_update'),
+    path('origenes/delete/<int:pk>/',
+         OrigenDeleteView.as_view(), name='origen_delete'),
 
-    path('rutas/', RutaListView.as_view(), name='ruta_list'),
-    path('rutas/create/', RutaCreateView.as_view(), name='ruta_create'),
-    path('rutas/update/<int:pk>/', RutaUpdateView.as_view(), name='ruta_update'),
-    path('rutas/delete/<int:pk>/', RutaDeleteView.as_view(), name='ruta_delete'),
+    path('rutas/', rutaLista, name='ruta_list'),
+    path('rutas/create/', rutaCreacion, name='ruta_create'),
+    path('rutas/update/<int:pk>/', rutaEdit, name='ruta_update'),
+    path('rutas/delete/<int:pk>/', rutaBorrar, name='ruta_delete'),
 ]

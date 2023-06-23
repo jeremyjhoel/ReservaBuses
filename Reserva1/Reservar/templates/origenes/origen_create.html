@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Crear Origen</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+
+            <div class="col py-3">
+                <h1>Bienvenido a Reserva de pasajes</h1>
+                <div class="row">
+                    {% if user.is_authenticated %}
+                    <div class="col-md-6">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {% bootstrap_form formulario %}
+                            {% buttons %}
+                            <button class="btn btn-primary" type="submit">Guardar</button>
+                            {% endbuttons %}
+                        </form>
+                        {% bootstrap_messages %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {% for post in posts %}
+                        <div class="card my-2">
+                            <div class="card-body">
+                                <p>{{ post.content }}</p>
+                            </div>
+                            <div class="card-footer">
+                                {{ post.author }} - {{ post.pub_date }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="/origenes/" class="btn btn-primary mx-3">Volver a la lista de origenes</a>
+
+    {% bootstrap_javascript %}
+</body>
+
+</html>
+
+{% endblock %}

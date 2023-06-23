@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Actualizar origen</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+</head>
+
+<body>
+    <div class="container">
+        <h1>Actualizar Origen</h1>
+        <form method="POST" action="">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+        </form>
+        <br>
+        <a href="/origenes/" class="btn btn-secondary">Volver a la lista de Origenes</a>
+    </div>
+    {% bootstrap_javascript %}
+</body>
+
+</html>
+
+{% endblock %}

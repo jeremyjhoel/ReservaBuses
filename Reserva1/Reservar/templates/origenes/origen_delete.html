@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eliminar Origen</title>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Eliminar Origen</h1>
+        <p>¿Estás seguro de que deseas eliminar el origen <strong>"{{ origen }}"</strong>?</p>
+        <form method="POST" action="/origenes/delete/{{ origen.id }}/" onsubmit="return confirmarEliminacion()">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+        <br>
+        <a href="/origenes/" class="btn btn-secondary">Volver a la lista de origenes</a>
+    </div>
+
+    <script>
+        function confirmarEliminacion() {
+            return confirm("¿Estás seguro de que deseas eliminar el origen?");
+        }
+    </script>
+</body>
+
+</html>
+
+{% endblock %}
