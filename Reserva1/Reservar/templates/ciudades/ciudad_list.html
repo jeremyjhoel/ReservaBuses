@@ -5,40 +5,41 @@
 <html>
 
 <head>
-    <title>Lista de origenes</title>
+    <title>Lista de ciudades</title>
     {% load bootstrap5 %}
     {% bootstrap_css %}
 </head>
 
 <body>
     <div class="container">
-        <h1>Lista de Origenes</h1>
+        <h1>Lista de ciudades</h1>
         <table class="table">
             <thead>
                 <tr>
                     <th>Ciudad</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                {% for origen in origenes %}
+                {% for ciudad in ciudades %}
                 <tr>
-                    <td>{{ origen.ciudadOrigen }}</td>
+                    <td>{{ ciudad.ciudad }}</td>
                     <td>
-                        <form method="GET" action="/origenes/delete/{{ origen.id }}/" style="display: inline;">
+                        <form method="GET" action="/ciudades/delete/{{ ciudad.id }}/" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Eliminar</button>
                         </form>
-                        <a href="/origenes/update/{{ origen.id }}" class="btn btn-primary">Editar</a>
+                        <a href="/ciudades/update/{{ ciudad.id }}" class="btn btn-primary">Editar</a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="3">No hay origenes disponibles</td>
+                    <td colspan="3">No hay ciudades disponibles</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <a href="/origenes/create/" class="btn btn-success">Crear nuevo origen</a>
+        <a href="/ciudades/create/" class="btn btn-success">Crear nueva ciudad</a>
     </div>
 </body>
 

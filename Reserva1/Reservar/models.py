@@ -14,27 +14,22 @@ class Cliente(models.Model):
         return self.nombre
 
 
-class Origen(models.Model):
-    ciudadOrigen = models.CharField(max_length=100, null=False)
+class Ciudades(models.Model):
+    ciudad = models.CharField(max_length=100, null=False)
 
     def __str__(self):
-        return self.ciudadOrigen
-
-
-class Destino(models.Model):
-    ciudadDestino = models.CharField(max_length=100, null=False)
-
-    def __str__(self):
-        return self.ciudadDestino
+        return self.ciudad
 
 
 class Ruta(models.Model):
-    ciudadO = models.ForeignKey(Origen, on_delete=models.CASCADE)
-    ciudadD = models.ForeignKey(Destino, on_delete=models.CASCADE)
+    ciudadO = models.ForeignKey(
+        Ciudades, related_name='rutas_origen', on_delete=models.CASCADE)
+    ciudadD = models.ForeignKey(
+        Ciudades, related_name='rutas_destino', on_delete=models.CASCADE)
     tiempoEstimado = models.TimeField(verbose_name='Tiempo estimado')
 
     def __str__(self):
-        return self.ciudadD.ciudadDestino
+        return self.ciudadD.ciudad
 
 
 class Bus(models.Model):

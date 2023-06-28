@@ -5,17 +5,23 @@
 <html>
 
 <head>
-    <title>Actualizar Ruta</title>
+    <title>Actualizar ruta</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
 </head>
 
 <body>
-    <h1>Actualizar Ruta</h1>
-    <form method="POST" action="">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Actualizar</button>
-    </form>
-    <a href="/buses/">Volver a la lista de Ruta</a>
+    <div class="container">
+        <h1>Actualizar ruta</h1>
+        <form method="POST" action="">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+        </form>
+        <br>
+        <a href="/rutas/" class="btn btn-secondary">Volver a la lista de rutas</a>
+    </div>
+    {% bootstrap_javascript %}
 </body>
 
 </html>

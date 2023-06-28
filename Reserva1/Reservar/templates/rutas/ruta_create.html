@@ -6,16 +6,51 @@
 
 <head>
     <title>Crear Ruta</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
 </head>
 
 <body>
-    <h1>Crear Ruta</h1>
-    <form method="POST" action="/rutas/create/">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Crear</button>
-    </form>
-    <a href="/rutas/">Volver a la lista de rutas</a>
+
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+
+            <div class="col py-3">
+                <h1>Bienvenido a Reserva de pasajes</h1>
+                <div class="row">
+                    {% if user.is_authenticated %}
+                    <div class="col-md-6">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {% bootstrap_form form %}
+                            {% buttons %}
+                            <button class="btn btn-primary" type="submit">Guardar</button>
+                            {% endbuttons %}
+                        </form>
+                        {% bootstrap_messages %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {% for post in posts %}
+                        <div class="card my-2">
+                            <div class="card-body">
+                                <p>{{ post.content }}</p>
+                            </div>
+                            <div class="card-footer">
+                                {{ post.author }} - {{ post.pub_date }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="/rutas/" class="btn btn-primary mx-3">Volver a la lista de rutas</a>
+
+    {% bootstrap_javascript %}
 </body>
 
 </html>

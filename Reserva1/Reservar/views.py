@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from .models import Cliente, Bus, Ruta, Destino, Origen
+from .models import Cliente, Bus, Ruta, Ciudades
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .forms import BusForm, RutaForm, DestinoForm, OrigenForm
+from .forms import BusForm, RutaForm, CiudadForm
 from django.urls import reverse_lazy
 
 
@@ -113,11 +113,11 @@ def bus_list(request):
     return render(request, 'buses/bus_list.html', context)
 
 
-def destinoCreate(request):
-    posts = Destino.objects.all()
+def ciudadCreate(request):
+    posts = Ciudades.objects.all()
 
     if request.method == 'POST':
-        post_form = DestinoForm(request.POST)
+        post_form = CiudadForm(request.POST)
 
         if post_form.is_valid():
             temp = post_form.save(commit=False)
@@ -130,71 +130,29 @@ def destinoCreate(request):
                 request, 'Ha ocurrido un error al guardar la publicación')
 
     else:
-        post_form = DestinoForm()
+        post_form = CiudadForm()
 
-    destino_form = DestinoForm()
+    Ciudades_form = CiudadForm()
 
-    return render(request, 'destinos/destino_create.html', {'destinos': posts, 'formulario': destino_form})
+    return render(request, 'ciudades/ciudad_create.html', {'ciudades': posts, 'formulario': Ciudades_form})
 
 
-def destino_list(request):
-    destinos = Destino.objects.all()
-    form = DestinoForm()
+def ciudad_list(request):
+    ciudades = Ciudades.objects.all()
+    form = CiudadForm()
 
     if request.method == 'POST':
-        form = DestinoForm(request.POST)
+        form = CiudadForm(request.POST)
         if form.is_valid():
             form.save()
             # Agregar mensajes de éxito o redireccionamiento si es necesario
 
     context = {
-        'destinos': destinos,
+        'ciudades': ciudades,
         'form': form
     }
 
-    return render(request, 'destinos/destino_list.html', context)
-
-
-def origenCreate(request):
-    posts = Origen.objects.all()
-
-    if request.method == 'POST':
-        post_form = OrigenForm(request.POST)
-
-        if post_form.is_valid():
-            temp = post_form.save(commit=False)
-            temp.author = request.user
-            temp.save()
-            messages.success(
-                request, 'La publicación fue guardada exitosamente')
-        else:
-            messages.error(
-                request, 'Ha ocurrido un error al guardar la publicación')
-
-    else:
-        post_form = OrigenForm()
-
-    origen_form = OrigenForm()
-
-    return render(request, 'origenes/origen_create.html', {'origenes': posts, 'formulario': origen_form})
-
-
-def origen_list(request):
-    origenes = Origen.objects.all()
-    form = OrigenForm()
-
-    if request.method == 'POST':
-        form = OrigenForm(request.POST)
-        if form.is_valid():
-            form.save()
-            # Agregar mensajes de éxito o redireccionamiento si es necesario
-
-    context = {
-        'origenes': origenes,
-        'form': form
-    }
-
-    return render(request, 'origenes/origen_list.html', context)
+    return render(request, 'ciudades/ciudad_list.html', context)
 
 
 class BusUpdateView(UpdateView):
@@ -251,39 +209,21 @@ class RutaDeleteView(DeleteView):
 # Esto para los destinos
 
 
-class DestinoUpdateView(UpdateView):
-    model = Destino
-    form_class = DestinoForm
-    template_name = 'destinos/destino_update.html'
-    success_url = '/destinos/'
+class CiudadUpdateView(UpdateView):
+    model = Ciudades
+    form_class = CiudadForm
+    template_name = 'ciudades/ciudad_update.html'
+    success_url = '/ciudades/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['destino_id'] = self.object.id
+        context['ciudad_id'] = self.object.id
         return context
 
 
-class DestinoDeleteView(DeleteView):
-    model = Destino
-    template_name = 'destinos/destino_delete.html'
-    success_url = '/destinos/'
+class CiudadDeleteView(DeleteView):
+    model = Ciudades
+    template_name = 'ciudades/ciudad_delete.html'
+    success_url = '/ciudades/'
 
 # Esto para los origenes
-
-
-class OrigenUpdateView(UpdateView):
-    model = Origen
-    form_class = OrigenForm
-    template_name = 'origenes/origen_update.html'
-    success_url = '/origenes/'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['origen_id'] = self.object.id
-        return context
-
-
-class OrigenDeleteView(DeleteView):
-    model = Origen
-    template_name = 'origenes/origen_delete.html'
-    success_url = '/origenes/'

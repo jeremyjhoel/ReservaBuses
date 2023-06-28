@@ -18,8 +18,8 @@ from django.urls import path, include
 from Reservar.views import index
 from Reservar.views import busCreate, bus_list, BusUpdateView, BusDeleteView
 from Reservar.views import RutaListView, RutaCreateView, RutaUpdateView, RutaDeleteView
-from Reservar.views import destino_list, destinoCreate, DestinoDeleteView, DestinoUpdateView
-from Reservar.views import origen_list, origenCreate, OrigenDeleteView, OrigenUpdateView, rutaLista, rutaCreacion, rutaBorrar, rutaEdit
+from Reservar.views import ciudad_list, ciudadCreate, CiudadDeleteView, CiudadUpdateView
+from Reservar.views import rutaLista, rutaCreacion, rutaBorrar, rutaEdit
 
 app_name = 'Reservar'
 
@@ -34,19 +34,12 @@ urlpatterns = [
     path('buses/update/<int:pk>/', BusUpdateView.as_view(), name='bus_update'),
     path('buses/delete/<int:pk>/', BusDeleteView.as_view(), name='bus_delete'),
 
-    path('destinos/', destino_list, name='destino_list'),
-    path('destinos/create/', destinoCreate, name='destino_create'),
-    path('destinos/update/<int:pk>/',
-         DestinoUpdateView.as_view(), name='destino_update'),
-    path('destinos/delete/<int:pk>/',
-         DestinoDeleteView.as_view(), name='destino_delete'),
-
-    path('origenes/', origen_list, name='origen_list'),
-    path('origenes/create/', origenCreate, name='origen_create'),
-    path('origenes/update/<int:pk>/',
-         OrigenUpdateView.as_view(), name='origen_update'),
-    path('origenes/delete/<int:pk>/',
-         OrigenDeleteView.as_view(), name='origen_delete'),
+    path('ciudades/', ciudad_list, name='ciudad_list'),
+    path('ciudades/create/', ciudadCreate, name='ciudad_create'),
+    path('ciudades/update/<int:pk>/',
+         CiudadUpdateView.as_view(), name='ciudad_update'),
+    path('ciudades/delete/<int:pk>/',
+         CiudadDeleteView.as_view(), name='ciudad_delete'),
 
     path('rutas/', rutaLista, name='ruta_list'),
     path('rutas/create/', rutaCreacion, name='ruta_create'),
