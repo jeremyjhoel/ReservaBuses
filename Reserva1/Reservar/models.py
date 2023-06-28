@@ -15,7 +15,7 @@ class Cliente(models.Model):
 
 
 class Ciudades(models.Model):
-    ciudad = models.CharField(max_length=100, null=False)
+    ciudad = models.CharField(max_length=100, null=False, unique=True)
 
     def __str__(self):
         return self.ciudad

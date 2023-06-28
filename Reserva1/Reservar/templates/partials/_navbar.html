@@ -20,6 +20,7 @@
                 id="dropdownUser1">Iniciar sesión</a>
             {%endif%}
         </div>
+        {% if user.is_authenticated %}
         <a class="mavbar-brand text-decoration-none text-white mx-1">{{ user.username }}</a>
         <a class="navbar-brand text-white" href="/">Reserva Buses</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
@@ -50,6 +51,7 @@
 
             </ul>
         </div>
+        {%endif%}
     </div>
     {% bootstrap_javascript %}
 </nav>
