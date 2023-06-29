@@ -45,6 +45,9 @@ class Asientos(models.Model):
     estado = models.BooleanField()
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.numero)
+
 
 class Reserva(models.Model):
     fechaReserva = models.DateTimeField(null=False)

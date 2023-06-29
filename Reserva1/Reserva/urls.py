@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path, include
 from Reservar.views import index
 from Reservar.views import busCreate, bus_list, BusUpdateView, BusDeleteView
-from Reservar.views import RutaListView, RutaCreateView, RutaUpdateView, RutaDeleteView
 from Reservar.views import ciudad_list, ciudadCreate, CiudadDeleteView, CiudadUpdateView
 from Reservar.views import rutaLista, rutaCreacion, rutaBorrar, rutaEdit
 

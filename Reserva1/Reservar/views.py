@@ -173,39 +173,6 @@ class BusDeleteView(DeleteView):
     success_url = '/buses/'
 
 
-# Esto para las rutas:
-
-class RutaListView(ListView):
-    model = Ruta
-    template_name = 'rutas/ruta_list.html'
-    context_object_name = 'rutas'
-    success_url = '/rutas/'
-
-
-class RutaCreateView(CreateView):
-    model = Ruta
-    form_class = RutaForm
-    template_name = 'rutas/ruta_create.html'
-    success_url = reverse_lazy('ruta_list')
-
-
-class RutaUpdateView(UpdateView):
-    model = Ruta
-    form_class = RutaForm
-    template_name = 'rutas/ruta_update.html'
-    success_url = '/rutas/'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['ruta_id'] = self.object.id
-        return context
-
-
-class RutaDeleteView(DeleteView):
-    model = Ruta
-    template_name = 'rutas/ruta_delete.html'
-    success_url = '/rutas/'
-
 # Esto para los destinos
 
 

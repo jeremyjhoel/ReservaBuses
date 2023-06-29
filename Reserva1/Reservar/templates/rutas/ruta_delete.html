@@ -5,14 +5,26 @@
 
 <head>
     <title>Eliminar ruta</title>
-
 </head>
 
 <body>
-
     <div class="container">
         <h1>Eliminar ruta</h1>
-        <p>¿Estás seguro de que deseas eliminar la ruta<strong>"{{ ruta }}"</strong>?</p>
+        <table class="table">
+            <tr>
+                <th>Ciudad de Origen:</th>
+                <td>{{ ruta.ciudadO }}</td>
+            </tr>
+            <tr>
+                <th>Ciudad de Destino:</th>
+                <td>{{ ruta.ciudadD }}</td>
+            </tr>
+            <tr>
+                <th>Tiempo Estimado:</th>
+                <td>{{ ruta.tiempoEstimado }}</td>
+            </tr>
+        </table>
+
         <form method="POST" action="/rutas/delete/{{ ruta.id }}/" onsubmit="return confirmarEliminacion()">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">Eliminar</button>
@@ -26,6 +38,7 @@
             return confirm("¿Estás seguro de que deseas eliminar la ruta?");
         }
     </script>
+
 </body>
 
 </html>
