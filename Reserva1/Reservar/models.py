@@ -42,7 +42,6 @@ class Bus(models.Model):
 
 class Asientos(models.Model):
     numero = models.IntegerField(blank=True, null=True)
-    estado = models.BooleanField()
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE)
 
     def __str__(self):

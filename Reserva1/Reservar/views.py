@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from .models import Cliente, Bus, Ruta, Ciudades
+from .models import Cliente, Bus, Ruta, Ciudades, Asientos
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .forms import BusForm, RutaForm, CiudadForm
+from .forms import BusForm, RutaForm, CiudadForm, AsientosForm
 from django.urls import reverse_lazy
 
 
@@ -71,28 +71,36 @@ def login(request):
     return render(request, 'blog/login.html')
 
 
+def crear_asientos(bus, cantidad_asientos):
+    for i in range(cantidad_asientos):
+        Asientos.objects.create(numero=i+1, bus=bus)
+
+
 def busCreate(request):
     posts = Bus.objects.all()
 
     if request.method == 'POST':
-        post_form = BusForm(request.POST)
+        bus_form = BusForm(request.POST)
 
-        if post_form.is_valid():
-            temp = post_form.save(commit=False)
-            temp.author = request.user
-            temp.save()
+        if bus_form.is_valid():
+            bus = bus_form.save()  # Guardar el objeto Bus
+
+            # Obtener la cantidad de asientos del formulario
+            cantidad_asientos = bus_form.cleaned_data['cantidadAsientos']
+
+            # Crear los asientos asociados al objeto Bus
+            crear_asientos(bus, cantidad_asientos)
+
             messages.success(
-                request, 'La publicación fue guardada exitosamente')
+                request, 'El bus y los asientos fueron creados exitosamente')
+            return redirect('bus_list')
         else:
             messages.error(
-                request, 'Ha ocurrido un error al guardar la publicación')
-
+                request, 'Ha ocurrido un error al crear el bus y los asientos')
     else:
-        post_form = BusForm()
+        bus_form = BusForm()
 
-    bus_form = BusForm()
-
-    return render(request, 'buses/bus_create.html', {'bus': posts, 'formulario': bus_form})
+    return render(request, 'buses/bus_create.html', {'bus_form': bus_form, 'bus': posts})
 
 
 def bus_list(request):

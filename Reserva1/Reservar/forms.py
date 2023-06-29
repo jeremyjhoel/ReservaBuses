@@ -1,5 +1,5 @@
 from django import forms
-from .models import Bus, Ruta, Ciudades, Asientos
+from .models import Bus, Ruta, Ciudades, Asientos, Disponibilidad
 
 
 class BusForm(forms.ModelForm):
@@ -36,10 +36,23 @@ class RutaForm(forms.ModelForm):
         fields = ['ciudadO', 'ciudadD', 'tiempoEstimado']
 
 
-class Asientos(forms.ModelForm):
+class AsientosForm(forms.ModelForm):
 
     class Meta:
         model = Asientos
-        fields = ['numero', 'estado', 'bus']
-        labels = {'numero': 'Numero de asiento:',
-                  'estado': 'Estado', 'bus': 'Bus'}
+        fields = ['numero', 'bus']
+        labels = {'numero': 'Numero de asiento:', 'bus': 'Bus'}
+
+
+class DisponibilidadForm(forms.ModelForm):
+    bus = forms.ModelChoiceField(queryset=Bus.objects.all(), label='Bus:')
+    asiento = forms.ModelChoiceField(
+        queryset=Asientos.objects.all(), label='Asiento:')
+    ruta = forms.ModelChoiceField(queryset=Ruta.objects.all(), label='Ruta:')
+    horario = forms.TimeField(label='Horario:')
+    fecha = forms.DateField(label='Fecha:')
+    disponible = forms.BooleanField(label='Disponibilidad:')
+
+    class Meta:
+        model = Disponibilidad
+        fields = ['bus', 'asiento', 'ruta', 'horario', 'fecha', 'disponible']
