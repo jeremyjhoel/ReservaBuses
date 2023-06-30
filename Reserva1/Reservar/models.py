@@ -57,7 +57,7 @@ class Reserva(models.Model):
     asiento = models.ForeignKey(Asientos, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.fechaReserva
+        return str(self.fechaReserva)
 
 
 class Disponibilidad(models.Model):
@@ -72,7 +72,7 @@ class Disponibilidad(models.Model):
     disponible = models.BooleanField()
 
     def __str__(self):
-        return self.horario
+        return str(self.horario)
 
 
 # Create your models here.

@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from .models import Cliente, Bus, Ruta, Ciudades, Asientos
+from .models import Cliente, Bus, Ruta, Ciudades, Asientos, Disponibilidad
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .forms import BusForm, RutaForm, CiudadForm, AsientosForm
+from .forms import BusForm, RutaForm, CiudadForm, AsientosForm, DisponibilidadForm
 from django.urls import reverse_lazy
 
 
@@ -161,6 +161,66 @@ def ciudad_list(request):
     }
 
     return render(request, 'ciudades/ciudad_list.html', context)
+
+
+def disponibilidadLista(request):
+    disponibilidades = Disponibilidad.objects.all()
+    return render(request, 'disponibilidades/disponibilidad_list.html', {'disponibilidades': disponibilidades})
+
+
+def disponibilidadCreacion(request):
+
+    if request.method == 'POST':
+        form = DisponibilidadForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request, 'La disponibilidad fue creada exitosamente')
+            return redirect('disponibilidad_list')
+        else:
+            messages.error(
+                request, 'Ha ocurrido un error al crear la disponibilidad')
+    else:
+        form = DisponibilidadForm()
+    return render(request, 'disponibilidades/disponibilidad_create.html', {'form': form})
+
+
+def disponibilidadBorrar(request, pk):
+    try:
+        disponibilidad = Disponibilidad.objects.get(pk=pk)
+    except Disponibilidad.DoesNotExist:
+        messages.error(request, 'La disponibilidad no existe')
+        return redirect('disponibilidad_list')
+
+    if request.method == 'POST':
+        disponibilidad.delete()
+        messages.success(
+            request, 'La disponibilidad fue eliminada exitosamente')
+        return redirect('disponibilidad_list')
+    return render(request, 'disponibilidades/disponibilidad_delete.html', {'disponibilidad': disponibilidad})
+
+
+def disponibilidadEdit(request, pk):
+    try:
+        disponibilidad = Disponibilidad.objects.get(pk=pk)
+    except Disponibilidad.DoesNotExist:
+        messages.error(request, 'La disponibilidad no existe')
+        return redirect('disponibilidad_list')
+
+    if request.method == 'POST':
+        form = DisponibilidadForm(request.POST, instance=disponibilidad)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request, 'La disponibilidad fue actualizada exitosamente')
+            return redirect('disponibilidad_list')
+        else:
+            messages.error(
+                request, 'Ha ocurrido un error al actualizar la disponibilidad')
+    else:
+        form = DisponibilidadForm(instance=disponibilidad)
+    return render(request, 'disponibilidades/disponibilidad_update.html', {'form': form, 'disponibilidad_id': pk})
 
 
 class BusUpdateView(UpdateView):

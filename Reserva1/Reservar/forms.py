@@ -46,8 +46,6 @@ class AsientosForm(forms.ModelForm):
 
 class DisponibilidadForm(forms.ModelForm):
     bus = forms.ModelChoiceField(queryset=Bus.objects.all(), label='Bus:')
-    asiento = forms.ModelChoiceField(
-        queryset=Asientos.objects.all(), label='Asiento:')
     ruta = forms.ModelChoiceField(queryset=Ruta.objects.all(), label='Ruta:')
     horario = forms.TimeField(label='Horario:')
     fecha = forms.DateField(label='Fecha:')
@@ -55,4 +53,4 @@ class DisponibilidadForm(forms.ModelForm):
 
     class Meta:
         model = Disponibilidad
-        fields = ['bus', 'asiento', 'ruta', 'horario', 'fecha', 'disponible']
+        fields = ['bus', 'ruta', 'horario', 'fecha', 'disponible']
