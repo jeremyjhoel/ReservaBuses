@@ -60,6 +60,18 @@ class Reserva(models.Model):
         return str(self.fechaReserva)
 
 
+class Horarios_buses(models.Model):
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE,
+                            related_name='Horarios_buses_bus')
+    ruta = models.ForeignKey(
+        Ruta, on_delete=models.CASCADE, related_name='Horarios_buses_ruta')
+    horario = models.TimeField()
+    fecha = models.DateField()
+
+    def __str__(self):
+        return str(self.horario)
+
+
 class Disponibilidad(models.Model):
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE,
                             related_name='disponibilidades_bus')
@@ -73,6 +85,5 @@ class Disponibilidad(models.Model):
 
     def __str__(self):
         return str(self.horario)
-
 
 # Create your models here.

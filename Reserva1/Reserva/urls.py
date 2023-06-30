@@ -19,7 +19,7 @@ from Reservar.views import index
 from Reservar.views import busCreate, bus_list, BusUpdateView, BusDeleteView
 from Reservar.views import ciudad_list, ciudadCreate, CiudadDeleteView, CiudadUpdateView
 from Reservar.views import rutaLista, rutaCreacion, rutaBorrar, rutaEdit
-from Reservar.views import disponibilidadLista, disponibilidadCreacion
+from Reservar.views import horariosBusesLista, horiariosBusesCreacion, horariosBusesEdit, horariosBusesBorrar
 
 app_name = 'Reservar'
 
@@ -46,8 +46,12 @@ urlpatterns = [
     path('rutas/update/<int:pk>/', rutaEdit, name='ruta_update'),
     path('rutas/delete/<int:pk>/', rutaBorrar, name='ruta_delete'),
 
-    path('disponibilidades/', disponibilidadLista, name='disponibilidad_list'),
-    path('disponibilidades/create/', disponibilidadCreacion,
-         name='disponibilidad_create'),
-
+    path('Horarios_buses/', horariosBusesLista,
+         name='Horarios_buses_list'),
+    path('Horarios_buses/create/', horiariosBusesCreacion,
+         name='Horarios_buses_create'),
+    path('Horarios_buses/update/<int:pk>/',
+         horariosBusesEdit, name='Horarios_buses_update'),
+    path('Horarios_buses/delete/<int:pk>/',
+         horariosBusesBorrar, name='Horarios_buses_delete'),
 ]

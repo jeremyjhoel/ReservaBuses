@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eliminar horario del bus</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Eliminar horario</h1>
+        <table class="table">
+            <tr>
+                <th>Ruta:</th>
+                <td>{{ Hora_b.ruta }}</td>
+            </tr>
+            <tr>
+                <th>Fecha:</th>
+                <td>{{ Hora_b.fecha }}</td>
+            </tr>
+            <tr>
+                <th>Hora:</th>
+                <td>{{ Hora_b.horario }}</td>
+            </tr>
+        </table>
+
+        <form method="POST" action="/Horarios_buses/delete/{{ Hora_b.id }}/" onsubmit="return confirmarEliminacion()">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+        <br>
+        <a href="/Horarios_buses/" class="btn btn-secondary">Volver a la lista de horarios de buses</a>
+    </div>
+
+    <script>
+        function confirmarEliminacion() {
+            return confirm("¿Estás seguro de que deseas eliminar el horario del bus?");
+        }
+    </script>
+
+</body>
+
+</html>
+
+{% endblock %}

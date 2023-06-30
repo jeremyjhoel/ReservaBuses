@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<h1>Lista de horarios de los buses</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Bus:</th>
+            <th>Ruta:</th>
+            <th>Horario:</th>
+            <th>Fecha:</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for Hora_b in Hora_b %}
+        <tr>
+            <td>{{ Hora_b.bus }}</td>
+            <td>{{ Hora_b.ruta }}</td>
+            <td>{{ Hora_b.horario }}</td>
+            <td>{{ Hora_b.fecha }}</td>
+            <td>
+                <form method="GET" action="/Horarios_buses/delete/{{ Hora_b.id }}" style="display: inline;">
+                    {% csrf_token %}
+                    <button class="btn btn-danger" type="submit">Eliminar</button>
+                </form>
+                <a class="btn btn-primary" href="/Horarios_buses/update/{{ Hora_b.id }}">Editar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No hay horarios de buses disponibles</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn btn-success mt-3" href="/Horarios_buses/create/">Crear nuevo horario de bus</a>
+
+{% endblock %}

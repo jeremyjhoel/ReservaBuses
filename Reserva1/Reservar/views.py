@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from .models import Cliente, Bus, Ruta, Ciudades, Asientos, Disponibilidad
+from .models import Cliente, Bus, Ruta, Ciudades, Asientos, Horarios_buses, Disponibilidad
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .forms import BusForm, RutaForm, CiudadForm, AsientosForm, DisponibilidadForm
+from .forms import BusForm, RutaForm, CiudadForm, AsientosForm, Horarios_busesForm
 from django.urls import reverse_lazy
 
 
@@ -163,64 +163,81 @@ def ciudad_list(request):
     return render(request, 'ciudades/ciudad_list.html', context)
 
 
-def disponibilidadLista(request):
-    disponibilidades = Disponibilidad.objects.all()
-    return render(request, 'disponibilidades/disponibilidad_list.html', {'disponibilidades': disponibilidades})
+def horariosBusesLista(request):
+    Hora_b = Horarios_buses.objects.all()
+    return render(request, 'Horarios_buses/Horarios_buses_list.html', {'Hora_b': Hora_b})
 
 
-def disponibilidadCreacion(request):
-
+def horiariosBusesCreacion(request):
     if request.method == 'POST':
-        form = DisponibilidadForm(request.POST)
-
+        form = Horarios_busesForm(request.POST)
         if form.is_valid():
-            form.save()
+            horario_buses = form.save(commit=False)
+            horario_buses.save()
+
+            bus = horario_buses.bus
+            asientos = Asientos.objects.filter(bus=bus)
+
+            disponibilidades = []
+            for asiento in asientos:
+                disponibilidad = Disponibilidad(
+                    bus=bus,
+                    asiento=asiento,
+                    ruta=horario_buses.ruta,
+                    horario=horario_buses.horario,
+                    fecha=horario_buses.fecha,
+                    disponible=True
+                )
+                disponibilidades.append(disponibilidad)
+
+            Disponibilidad.objects.bulk_create(disponibilidades)
+
             messages.success(
-                request, 'La disponibilidad fue creada exitosamente')
-            return redirect('disponibilidad_list')
+                request, 'El horario del bus fue creado exitosamente')
+            return redirect('Horarios_buses_list')
         else:
             messages.error(
-                request, 'Ha ocurrido un error al crear la disponibilidad')
+                request, 'Ha ocurrido un error al crear el horario de los buses')
     else:
-        form = DisponibilidadForm()
-    return render(request, 'disponibilidades/disponibilidad_create.html', {'form': form})
+        form = Horarios_busesForm()
+    return render(request, 'Horarios_buses/Horarios_buses_create.html', {'form': form})
 
 
-def disponibilidadBorrar(request, pk):
+def horariosBusesBorrar(request, pk):
     try:
-        disponibilidad = Disponibilidad.objects.get(pk=pk)
-    except Disponibilidad.DoesNotExist:
-        messages.error(request, 'La disponibilidad no existe')
-        return redirect('disponibilidad_list')
+        Hora_b = Horarios_buses.objects.get(pk=pk)
+    except Horarios_buses.DoesNotExist:
+        messages.error(request, 'El horario del bus no existe')
+        return redirect('Horarios_buses_list')
 
     if request.method == 'POST':
-        disponibilidad.delete()
+        Hora_b.delete()
         messages.success(
-            request, 'La disponibilidad fue eliminada exitosamente')
-        return redirect('disponibilidad_list')
-    return render(request, 'disponibilidades/disponibilidad_delete.html', {'disponibilidad': disponibilidad})
+            request, 'El horario del bus fue eliminado exitosamente')
+        return redirect('Horarios_buses_list')
+    return render(request, 'Horarios_buses/Horarios_buses_delete.html', {'Hora_b': Hora_b})
 
 
-def disponibilidadEdit(request, pk):
+def horariosBusesEdit(request, pk):
     try:
-        disponibilidad = Disponibilidad.objects.get(pk=pk)
-    except Disponibilidad.DoesNotExist:
-        messages.error(request, 'La disponibilidad no existe')
-        return redirect('disponibilidad_list')
+        Hora_b = Horarios_buses.objects.get(pk=pk)
+    except Horarios_buses.DoesNotExist:
+        messages.error(request, 'El horario del bus no existe')
+        return redirect('Horarios_buses_list')
 
     if request.method == 'POST':
-        form = DisponibilidadForm(request.POST, instance=disponibilidad)
+        form = Horarios_busesForm(request.POST, instance=Hora_b)
         if form.is_valid():
             form.save()
             messages.success(
-                request, 'La disponibilidad fue actualizada exitosamente')
-            return redirect('disponibilidad_list')
+                request, 'El horario del bus fue actualizado exitosamente')
+            return redirect('Horarios_buses_list')
         else:
             messages.error(
-                request, 'Ha ocurrido un error al actualizar la disponibilidad')
+                request, 'Ha ocurrido un error al actualizar el horario del bus')
     else:
-        form = DisponibilidadForm(instance=disponibilidad)
-    return render(request, 'disponibilidades/disponibilidad_update.html', {'form': form, 'disponibilidad_id': pk})
+        form = Horarios_busesForm(instance=Hora_b)
+    return render(request, 'Horarios_buses/Horarios_buses_update.html', {'form': form, 'Hora_b_id': pk})
 
 
 class BusUpdateView(UpdateView):
