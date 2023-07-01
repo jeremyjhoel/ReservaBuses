@@ -211,10 +211,22 @@ def horariosBusesBorrar(request, pk):
         return redirect('Horarios_buses_list')
 
     if request.method == 'POST':
+        disponibilidades = Disponibilidad.objects.filter(
+            fecha=Hora_b.fecha, horario=Hora_b.horario, bus=Hora_b.bus)
+
+        for disponibilidad in disponibilidades:
+            if not disponibilidad.disponible:
+                messages.error(
+                    request, 'No se puede eliminar el horario del bus debido a la disponibilidad no disponible')
+                return redirect('Horarios_buses_list')
+
+        disponibilidades.delete()
+
         Hora_b.delete()
         messages.success(
             request, 'El horario del bus fue eliminado exitosamente')
         return redirect('Horarios_buses_list')
+
     return render(request, 'Horarios_buses/Horarios_buses_delete.html', {'Hora_b': Hora_b})
 
 
