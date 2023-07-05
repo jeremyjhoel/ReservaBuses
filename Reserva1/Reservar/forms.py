@@ -29,7 +29,7 @@ class RutaForm(forms.ModelForm):
     ciudadD = forms.ModelChoiceField(queryset=Ciudades.objects.all(
     ), label='Ciudad de destino:')
     tiempoEstimado = forms.TimeField(
-        label='Tiempo estimado:')
+        label='Tiempo estimado:', widget=forms.TimeInput(attrs={'type': 'time'}))
 
     class Meta:
         model = Ruta

@@ -7,7 +7,7 @@ class Cliente(models.Model):
     nombre = models.CharField(max_length=100, null=False)
     apellidoP = models.CharField(max_length=100, null=False)
     apellidoM = models.CharField(max_length=100, null=False)
-    email = models.EmailField(max_length=100, null=False, unique=True)
+    email = models.EmailField(max_length=100, null=False)
     telefono = models.CharField(max_length=20, blank=True)
     rut = models.CharField(max_length=200, null=False, unique=True)
 

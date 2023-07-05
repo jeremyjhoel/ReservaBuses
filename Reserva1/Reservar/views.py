@@ -21,7 +21,16 @@ def rutaLista(request):
 def rutaCreacion(request):
     if request.method == 'POST':
         form = RutaForm(request.POST)
+        rutas = form.save(commit=False)
         if form.is_valid():
+
+            ciudades = Ciudades.objects.all()
+
+            for ciudad in ciudades:
+                if ciudad.ciudad == rutas.ciudadO.ciudad:
+                    messages.error(
+                        request, 'Ha ocurrido un error al crear la ruta')
+                    return redirect('ruta_create')
             form.save()
             messages.success(request, 'La ruta fue creada exitosamente')
             return redirect('ruta_list')
@@ -277,7 +286,10 @@ def clienteLista(request):
 def clienteCreacion(request):
     if request.method == 'POST':
         cliente_form = ClienteForm(request.POST)
+        cliente = cliente_form.save(commit=False)
         if cliente_form.is_valid():
+            Rut = str(cliente.rut)
+            print(Rut[1], "Este es el rut, o eso espero")
             cliente_form.save()
             messages.success(request, 'Datos fueron ingresados exitosamente')
             return redirect('cliente_list')
