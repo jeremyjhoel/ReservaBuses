@@ -5,10 +5,9 @@
 <html>
 
 <head>
-    <title>Crear Bus</title>
+    <title>Ingrese sus datos:</title>
     {% load bootstrap5 %}
     {% bootstrap_css %}
-
 </head>
 
 <body>
@@ -17,13 +16,13 @@
         <div class="row flex-nowrap">
 
             <div class="col py-3">
-                <h1>Bienvenido a UTalBook</h1>
+                <h1>Bienvenido a Reserva de pasajes</h1>
                 <div class="row">
                     {% if user.is_authenticated %}
                     <div class="col-md-6">
                         <form method="POST">
                             {% csrf_token %}
-                            {% bootstrap_form bus_form %}
+                            {% bootstrap_form cliente_form %}
                             {% buttons %}
                             <button class="btn btn-primary" type="submit">Guardar</button>
                             {% endbuttons %}
@@ -49,7 +48,7 @@
             </div>
         </div>
     </div>
-    <a href="/buses/" class="btn btn-secondary mx-3">Volver a la lista de buses</a>
+    <a href="/clientes/" class="btn btn-secondary mx-3">Volver a la lista de clientes</a>
 
     {% bootstrap_javascript %}
 </body>

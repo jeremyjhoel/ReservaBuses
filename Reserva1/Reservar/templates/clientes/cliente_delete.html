@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eliminar cliente</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Eliminar cliente</h1>
+        <table class="table">
+            <tr>
+                <th>Nombre:</th>
+                <td>{{ cliente.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Apellido paterno:</th>
+                <td>{{ cliente.apellidoP }}</td>
+            </tr>
+            <tr>
+                <th>Apellido materno:</th>
+                <td>{{ cliente.apellidoM }}</td>
+            </tr>
+            <tr>
+                <th>Rut:</th>
+                <td>{{ cliente.rut }}</td>
+            </tr>
+        </table>
+
+        <form method="POST" action="/clientes/delete/{{ cliente.id }}/" onsubmit="return confirmarEliminacion()">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+        <br>
+        <a href="/clientes/" class="btn btn-secondary">Volver a la lista de clientes</a>
+    </div>
+
+    <script>
+        function confirmarEliminacion() {
+            return confirm("¿Estás seguro de que deseas eliminar al cliente?");
+        }
+    </script>
+
+</body>
+
+</html>
+
+{% endblock %}

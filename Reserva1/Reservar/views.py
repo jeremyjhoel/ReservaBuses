@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from .models import Cliente, Bus, Ruta, Ciudades, Asientos, Horarios_buses, Disponibilidad
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .forms import BusForm, RutaForm, CiudadForm, AsientosForm, Horarios_busesForm
+from .forms import BusForm, RutaForm, CiudadForm, Horarios_busesForm, ClienteForm
 from django.urls import reverse_lazy
 
 
@@ -233,6 +233,7 @@ def horariosBusesBorrar(request, pk):
 def horariosBusesEdit(request, pk):
     try:
         Hora_b = Horarios_buses.objects.get(pk=pk)
+        Hora_a = Horarios_buses.objects.get(pk=pk)
     except Horarios_buses.DoesNotExist:
         messages.error(request, 'El horario del bus no existe')
         return redirect('Horarios_buses_list')
@@ -240,6 +241,21 @@ def horariosBusesEdit(request, pk):
     if request.method == 'POST':
         form = Horarios_busesForm(request.POST, instance=Hora_b)
         if form.is_valid():
+
+            disponibilidades = Disponibilidad.objects.filter(
+                fecha=Hora_a.fecha,
+                horario=Hora_a.horario,
+                bus=Hora_a.bus
+            )
+
+            for disponibilidad in disponibilidades:
+                if disponibilidad.disponible:
+                    disponibilidad.fecha = Hora_b.fecha
+                    disponibilidad.horario = Hora_b.horario
+                    disponibilidad.bus = Hora_b.bus
+                    disponibilidad.ruta = Hora_b.ruta
+                    disponibilidad.save()
+
             form.save()
             messages.success(
                 request, 'El horario del bus fue actualizado exitosamente')
@@ -249,7 +265,64 @@ def horariosBusesEdit(request, pk):
                 request, 'Ha ocurrido un error al actualizar el horario del bus')
     else:
         form = Horarios_busesForm(instance=Hora_b)
+
     return render(request, 'Horarios_buses/Horarios_buses_update.html', {'form': form, 'Hora_b_id': pk})
+
+
+def clienteLista(request):
+    clientes = Cliente.objects.all()
+    return render(request, 'clientes/cliente_list.html', {'clientes': clientes})
+
+
+def clienteCreacion(request):
+    if request.method == 'POST':
+        cliente_form = ClienteForm(request.POST)
+        if cliente_form.is_valid():
+            cliente_form.save()
+            messages.success(request, 'Datos fueron ingresados exitosamente')
+            return redirect('cliente_list')
+        else:
+            messages.error(
+                request, 'Ha ocurrido un error al guardar los datos.')
+    else:
+        cliente_form = ClienteForm()
+    return render(request, 'clientes/cliente_create.html', {'cliente_form': cliente_form})
+
+
+def clienteBorrar(request, pk):
+    try:
+        cliente = Cliente.objects.get(pk=pk)
+    except Cliente.DoesNotExist:
+        messages.error(request, 'El cliente no existe')
+        return redirect('cliente_list')
+
+    if request.method == 'POST':
+        cliente.delete()
+        messages.success(request, 'El cliente fue eliminado exitosamente')
+        return redirect('cliente_list')
+    return render(request, 'clientes/cliente_delete.html', {'cliente': cliente})
+
+
+def clienteEdit(request, pk):
+    try:
+        cliente = Cliente.objects.get(pk=pk)
+    except Cliente.DoesNotExist:
+        messages.error(request, 'El cliente no existe')
+        return redirect('cliente_list')
+
+    if request.method == 'POST':
+        cliente_form = ClienteForm(request.POST, instance=cliente)
+        if cliente_form.is_valid():
+            cliente_form.save()
+            messages.success(
+                request, 'El cliente fue actualizado exitosamente')
+            return redirect('cliente_list')
+        else:
+            messages.error(
+                request, 'Ha ocurrido un error al actualizar al cliente')
+    else:
+        cliente_form = ClienteForm(instance=cliente)
+    return render(request, 'clientes/cliente_update.html', {'cliente_form': cliente_form, 'cliente_id': pk})
 
 
 class BusUpdateView(UpdateView):

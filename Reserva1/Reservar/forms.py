@@ -1,5 +1,5 @@
 from django import forms
-from .models import Bus, Ruta, Ciudades, Asientos, Disponibilidad, Horarios_buses
+from .models import Bus, Ruta, Ciudades, Asientos, Horarios_buses, Cliente
 
 
 class BusForm(forms.ModelForm):
@@ -55,3 +55,13 @@ class Horarios_busesForm(forms.ModelForm):
     class Meta:
         model = Horarios_buses
         fields = ['bus', 'ruta', 'horario', 'fecha']
+
+
+class ClienteForm(forms.ModelForm):
+
+    class Meta:
+        model = Cliente
+        fields = ['nombre', 'apellidoP',
+                  'apellidoM', 'email', 'telefono', 'rut']
+        labels = {'nombre': 'Nombre:', 'apellidoP': 'Apellido paterno:', 'apellidoM': 'Apellido materno:',
+                  'email': 'Email', 'telefono': 'Telefono:', 'rut': 'Rut:'}
