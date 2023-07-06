@@ -23,14 +23,14 @@ def rutaCreacion(request):
         form = RutaForm(request.POST)
         rutas = form.save(commit=False)
         if form.is_valid():
+            print(rutas.ciudadO.ciudad, "esta es la que entra")
 
-            ciudades = Ciudades.objects.all()
-
-            for ciudad in ciudades:
-                if ciudad.ciudad == rutas.ciudadO.ciudad:
-                    messages.error(
-                        request, 'Ha ocurrido un error al crear la ruta')
-                    return redirect('ruta_create')
+            if rutas.ciudadO.ciudad == rutas.ciudadD.ciudad:
+                messages.error(
+                    request, 'Ha ocurrido un error al crear la ruta')
+                messages.error(
+                    request, 'la ciudad de origen no puede ser el mismo que el detino')
+                return redirect('ruta_create')
             form.save()
             messages.success(request, 'La ruta fue creada exitosamente')
             return redirect('ruta_list')

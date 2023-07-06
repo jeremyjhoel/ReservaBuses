@@ -30,7 +30,9 @@ class Ruta(models.Model):
     tiempoEstimado = models.TimeField(verbose_name='Tiempo estimado')
 
     def __str__(self):
-        return self.ciudadD.ciudad
+        ruta = str(self.ciudadO.ciudad) + " -> " + str(self.ciudadD.ciudad)
+
+        return ruta
 
 
 class Bus(models.Model):
@@ -65,7 +67,7 @@ class Horarios_buses(models.Model):
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE,
                             related_name='Horarios_buses_bus')
     ruta = models.ForeignKey(
-        Ruta, on_delete=models.CASCADE, related_name='Horarios_buses_ruta')
+        Ruta, on_delete=models.CASCADE, related_name='Horarios_buses_ciudadO')
     horario = models.TimeField()
     fecha = models.DateField()
 

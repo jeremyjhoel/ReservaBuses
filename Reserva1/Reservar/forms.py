@@ -46,7 +46,8 @@ class AsientosForm(forms.ModelForm):
 
 class Horarios_busesForm(forms.ModelForm):
     bus = forms.ModelChoiceField(queryset=Bus.objects.all(), label='Bus:')
-    ruta = forms.ModelChoiceField(queryset=Ruta.objects.all(), label='Ruta:')
+    ruta = forms.ModelChoiceField(
+        queryset=Ruta.objects.all(), label='Ruta:')
     horario = forms.TimeField(
         label='Horario:', widget=forms.TimeInput(attrs={'type': 'time'}))
     fecha = forms.DateField(
