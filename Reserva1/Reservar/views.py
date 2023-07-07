@@ -24,8 +24,6 @@ def rutaCreacion(request):
         form = RutaForm(request.POST)
         rutas = form.save(commit=False)
         if form.is_valid():
-            print(rutas.ciudadO.ciudad, "esta es la que entra")
-
             if rutas.ciudadO.ciudad == rutas.ciudadD.ciudad:
                 messages.error(
                     request, 'Ha ocurrido un error al crear la ruta')
@@ -295,6 +293,12 @@ def horariosBusesEdit(request, pk):
 
 def disponibilidadLista(request):
     disponibilidades = Disponibilidad.objects.all()
+    dato = request.POST.get('dato')
+    if dato != None:
+        for disponibilidad in disponibilidades:
+            if int(disponibilidad.id) == int(dato):
+                disponibilidad.disponible = True
+                disponibilidad.save()
     return render(request, 'disponibilidades/disponibilidad_list.html', {'disponibilidades': disponibilidades})
 
 
@@ -399,7 +403,6 @@ def crear_reserva(request, pk):
                 reserva.cliente = cliente
                 disponibilidad = Disponibilidad.objects.get(
                     id=disponibilidad_id)
-                print(disponibilidad.disponible)
                 if disponibilidad.disponible:
                     reserva.ruta = disponibilidad.ruta
                     reserva.asiento = disponibilidad.asiento
@@ -407,10 +410,10 @@ def crear_reserva(request, pk):
                     reserva.horarioReserva = disponibilidad.horario
                     reserva.bus = disponibilidad.bus
                     reserva.save()
-                    print(disponibilidad_id)
+
                     disponibilidad.disponible = False
                     disponibilidad.save()
-                    print(disponibilidad.disponible)
+
                     reservas.append(reserva)
                 else:
                     messages.error(

@@ -27,7 +27,11 @@
             <td>{{ disponibilidad }}</td>
 
             <td>
-                <a class="btn btn-primary" href="/disponibilidades/update/{{ ruta.id }}">Editar</a>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="dato" value="{{ disponibilidad.id }}">
+                    <button class="btn btn-primary" type="submit">Desocupar</button>
+                </form>
             </td>
         </tr>
         {% empty %}
