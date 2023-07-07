@@ -383,7 +383,7 @@ def crear_reserva(request, pk):
 
             reserva = form.save(commit=False)
             disponibilidades = Disponibilidad.objects.filter(
-                fecha=reserva.fechaReserva, ruta=ruta_id)
+                fecha=reserva.fechaReserva, horario=reserva.horarioReserva, ruta=ruta_id)
             for disponibilidad_id in disponibilidad_ids:
                 reserva = form.save(commit=False)
                 reserva.cliente = cliente
