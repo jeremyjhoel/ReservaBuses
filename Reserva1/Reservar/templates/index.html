@@ -14,9 +14,19 @@
 
 <body>
     {% csrf_token %}
-    <h1>Hola, esta es la que va a ser para los clientes</h1>
-
-
+    {% if not user.is_authenticated %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-10 offset-1">
+                <div class="text-center mt-5">
+                    <h1 class="mb-4">Bienvenido al Sitio de Reservas</h1>
+                    <p class="lead">Reserva tu pasaje de bus ahora mismo</p>
+                    <a href="/clientes/create/" class="btn btn-primary btn-lg">Reservar pasaje</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </body>
 
 </html>

@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from .models import Cliente, Bus, Ruta, Ciudades, Asientos, Horarios_buses, Disponibilidad
+from .models import Cliente, Bus, Ruta, Ciudades, Asientos, Horarios_buses, Disponibilidad, Reserva
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .forms import BusForm, RutaForm, CiudadForm, Horarios_busesForm, ClienteForm
+from .forms import BusForm, RutaForm, CiudadForm, Horarios_busesForm, ClienteForm, ReservaForm
 from django.urls import reverse_lazy
+from datetime import date
 
 
 def index(request):
@@ -182,28 +183,38 @@ def horiariosBusesCreacion(request):
         form = Horarios_busesForm(request.POST)
         if form.is_valid():
             horario_buses = form.save(commit=False)
-            horario_buses.save()
 
-            bus = horario_buses.bus
-            asientos = Asientos.objects.filter(bus=bus)
+            Hoy = date.today()
 
-            disponibilidades = []
-            for asiento in asientos:
-                disponibilidad = Disponibilidad(
-                    bus=bus,
-                    asiento=asiento,
-                    ruta=horario_buses.ruta,
-                    horario=horario_buses.horario,
-                    fecha=horario_buses.fecha,
-                    disponible=True
-                )
-                disponibilidades.append(disponibilidad)
+            if Hoy >= horario_buses.fecha or Hoy == horario_buses.fecha:
+                messages.error(
+                    request, 'Ha ocurrido un error al crear el horario de los buses.')
+                messages.error(
+                    request, 'No se puede crear un horario para el pasado o el presente.')
+                return redirect('Horarios_buses_create')
+            else:
+                horario_buses.save()
 
-            Disponibilidad.objects.bulk_create(disponibilidades)
+                bus = horario_buses.bus
+                asientos = Asientos.objects.filter(bus=bus)
 
-            messages.success(
-                request, 'El horario del bus fue creado exitosamente')
-            return redirect('Horarios_buses_list')
+                disponibilidades = []
+                for asiento in asientos:
+                    disponibilidad = Disponibilidad(
+                        bus=bus,
+                        asiento=asiento,
+                        ruta=horario_buses.ruta,
+                        horario=horario_buses.horario,
+                        fecha=horario_buses.fecha,
+                        disponible=True
+                    )
+                    disponibilidades.append(disponibilidad)
+
+                Disponibilidad.objects.bulk_create(disponibilidades)
+
+                messages.success(
+                    request, 'El horario del bus fue creado exitosamente')
+                return redirect('Horarios_buses_list')
         else:
             messages.error(
                 request, 'Ha ocurrido un error al crear el horario de los buses')
@@ -226,7 +237,7 @@ def horariosBusesBorrar(request, pk):
         for disponibilidad in disponibilidades:
             if not disponibilidad.disponible:
                 messages.error(
-                    request, 'No se puede eliminar el horario del bus debido a la disponibilidad no disponible')
+                    request, 'No se puede eliminar el horario del bus debido a que ya hay una compra.')
                 return redirect('Horarios_buses_list')
 
         disponibilidades.delete()
@@ -264,6 +275,10 @@ def horariosBusesEdit(request, pk):
                     disponibilidad.bus = Hora_b.bus
                     disponibilidad.ruta = Hora_b.ruta
                     disponibilidad.save()
+                else:
+                    messages.error(
+                        request, 'No se puede editar un horario con boletos vendidos.')
+                    return redirect('Horarios_buses_update')
 
             form.save()
             messages.success(
@@ -289,10 +304,22 @@ def clienteCreacion(request):
         cliente = cliente_form.save(commit=False)
         if cliente_form.is_valid():
             Rut = str(cliente.rut)
-            print(Rut[1], "Este es el rut, o eso espero")
-            cliente_form.save()
-            messages.success(request, 'Datos fueron ingresados exitosamente')
-            return redirect('cliente_list')
+            if validar_rut(Rut):
+                cliente_form.save()
+                messages.success(
+                    request, 'Datos fueron ingresados exitosamente')
+                if request.user.is_authenticated:
+                    return redirect('cliente_list')
+                else:
+                    return redirect('reserva_create', cliente.id)
+
+            else:
+                messages.error(
+                    request, 'Ha ocurrido un error, el rut no es válido')
+                if request.user.is_authenticated:
+                    return redirect('cliente_create')
+                else:
+                    return redirect('index')
         else:
             messages.error(
                 request, 'Ha ocurrido un error al guardar los datos.')
@@ -337,6 +364,47 @@ def clienteEdit(request, pk):
     return render(request, 'clientes/cliente_update.html', {'cliente_form': cliente_form, 'cliente_id': pk})
 
 
+def crear_reserva(request, pk):
+    try:
+        cliente = Cliente.objects.get(pk=pk)
+    except Cliente.DoesNotExist:
+        messages.error(request, 'El cliente no existe')
+        return redirect('index')
+    disponibilidades = Disponibilidad.objects.all()
+    if request.method == 'POST':
+        form = ReservaForm(request.POST)
+        if form.is_valid():
+            reserva = form.save(commit=False)
+            print(request.POST.get('ruta'))
+            disponibilidades = Disponibilidad.objects.filter(
+                fecha=reserva.fechaReserva, ruta=request.POST.get('ruta'))
+            # Obtener datos de otras clases para completar la reserva
+            # Ejemplo: Obtener cliente, ruta, bus y asiento
+            ruta_id = request.POST.get('ruta')
+            bus_id = request.POST.get('bus')
+            asiento_id = request.POST.get('asiento')
+
+            # ruta = Ruta.objects.get(ruta=ruta_id)
+            # bus = Bus.objects.get(patente=bus_id)
+            # asiento = Asientos.objects.get(numero=asiento_id)
+
+            # Asignar los valores obtenidos a la reserva
+            # reserva.cliente = cliente
+            # reserva.ruta = ruta
+            # reserva.bus = bus
+            # reserva.asiento = asiento
+
+            # Guardar la reserva completa en la base de datos
+            # reserva.save()
+
+            # Redirigir a una página de confirmación
+            # return redirect('index')
+    else:
+        form = ReservaForm()
+
+    return render(request, 'reservas/reserva_create.html', {'form': form, 'disponibilidades': disponibilidades})
+
+
 class BusUpdateView(UpdateView):
     model = Bus
     form_class = BusForm
@@ -376,3 +444,49 @@ class CiudadDeleteView(DeleteView):
     success_url = '/ciudades/'
 
 # Esto para los origenes
+
+
+def validar_rut(rut):
+    rut = rut.replace(".", "")  # Eliminar puntos del Rut
+    rut = rut.replace("-", "")  # Eliminar guion del Rut
+
+    if len(rut) < 2:
+        return False
+
+    num_base = rut[:-1]
+    dig_verif = rut[-1].upper()
+
+    calculo_digito = []  # Lista que tendrá los valores que cambiarán para el cálculo
+    # Lista que posee las cantidades a utilizar para el cálculo
+    multiplicador = [2, 3, 4, 5, 6, 7, 2, 3, 4, 5, 6, 7, 2, 3, 4, 5, 6, 7]
+
+    # Ciclo para verificar caracteres no válidos
+    for i in range(len(num_base)):
+        # En caso de que tenga puntos o comas retorna False
+        if num_base[i] == "." or num_base[i] == ",":
+            return False
+        if num_base[i] == "-":  # En caso de que tenga guión retorna False
+            return False
+
+    primera_suma = 0
+    segunda_suma = 0
+
+    # Cálculo del dígito verificador
+    for i in range(len(num_base)):
+        calculo_digito.append(
+            int(num_base[len(num_base) - 1 - i]) * multiplicador[i])
+        primera_suma += calculo_digito[i]
+
+    segunda_suma = primera_suma // 11
+    segunda_suma = segunda_suma * 11
+    primera_suma = primera_suma - segunda_suma
+    digito_esperado = 11 - primera_suma
+
+    if digito_esperado == 11:
+        digito_esperado = "0"
+    elif digito_esperado == 10:
+        digito_esperado = "K"
+    else:
+        digito_esperado = str(digito_esperado)
+
+    return digito_esperado == dig_verif

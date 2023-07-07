@@ -12,7 +12,9 @@ class Cliente(models.Model):
     rut = models.CharField(max_length=200, null=False, unique=True)
 
     def __str__(self):
-        return self.nombre
+        persona = str(self.nombre) + " " + self.apellidoP + \
+            " " + str(self.apellidoM)
+        return persona
 
 
 class Ciudades(models.Model):
@@ -52,7 +54,8 @@ class Asientos(models.Model):
 
 
 class Reserva(models.Model):
-    fechaReserva = models.DateTimeField(null=False)
+    fechaReserva = models.DateField(null=False)
+    horarioReserva = models.TimeField(null=False)
     cantidadPasajes = models.IntegerField(null=False)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE)
