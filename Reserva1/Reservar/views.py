@@ -305,10 +305,15 @@ def clienteLista(request):
 
 def clienteCreacion(request):
     if request.method == 'POST':
+        Tclientes = Cliente.objects.all()
         cliente_form = ClienteForm(request.POST)
         cliente = cliente_form.save(commit=False)
+
         if cliente_form.is_valid():
             Rut = str(cliente.rut)
+            for clientes in Tclientes:
+                if cliente.rut == clientes.rut:
+                    return redirect('reserva_create', clientes.id)
             if validar_rut(Rut):
                 cliente_form.save()
                 messages.success(
