@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<h1>Lista de Disponibilidades</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Fecha:</th>
+            <th>Horario:</th>
+            <th>Ruta:</th>
+            <th>Bus:</th>
+            <th>N° de asiento:</th>
+            <th>Estado:</th>
+            <th>Acciones:</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for disponibilidad in disponibilidades %}
+        <tr>
+            <td>{{ disponibilidad.fecha }}</td>
+            <td>{{ disponibilidad.horario }}</td>
+            <td>{{ disponibilidad.ruta }}</td>
+            <td>{{ disponibilidad.bus }}</td>
+            <td>{{ disponibilidad.asiento }}</td>
+            <td>{{ disponibilidad }}</td>
+
+            <td>
+                <a class="btn btn-primary" href="/disponibilidades/update/{{ ruta.id }}">Editar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No hay asientos disponibles</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

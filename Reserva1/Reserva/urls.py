@@ -22,6 +22,7 @@ from Reservar.views import rutaLista, rutaCreacion, rutaBorrar, rutaEdit
 from Reservar.views import horariosBusesLista, horiariosBusesCreacion, horariosBusesEdit, horariosBusesBorrar
 from Reservar.views import clienteLista, clienteCreacion, clienteBorrar, clienteEdit
 from Reservar.views import crear_reserva
+from Reservar.views import disponibilidadLista
 
 app_name = 'Reservar'
 
@@ -31,6 +32,8 @@ urlpatterns = [
     path('', index, name='index'),
     path('accounts/', include('django.contrib.auth.urls'), name='logout'),
     path('reservas/create/<int:pk>', crear_reserva, name='reserva_create'),
+
+    path('disponibilidades/', disponibilidadLista, name='disponibilidad_list'),
 
     path('buses/', bus_list, name='bus_list'),
     path('buses/create/', busCreate, name='bus_create'),

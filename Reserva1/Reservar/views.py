@@ -293,6 +293,11 @@ def horariosBusesEdit(request, pk):
     return render(request, 'Horarios_buses/Horarios_buses_update.html', {'form': form, 'Hora_b_id': pk})
 
 
+def disponibilidadLista(request):
+    disponibilidades = Disponibilidad.objects.all()
+    return render(request, 'disponibilidades/disponibilidad_list.html', {'disponibilidades': disponibilidades})
+
+
 def clienteLista(request):
     clientes = Cliente.objects.all()
     return render(request, 'clientes/cliente_list.html', {'clientes': clientes})
