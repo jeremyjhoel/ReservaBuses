@@ -28,12 +28,13 @@
         {% if form.is_bound and form.is_valid %}
         <tbody>
             {% for disponibilidad in disponibilidades %}
-
             <tr>
                 <td>
+                    {% if disponibilidad.disponible %}
                     <input type="checkbox" name="disponibilidad_id" value="{{ disponibilidad.id }}"
                         id="checkbox-{{ disponibilidad.id }}">
                     <label for="checkbox-{{ disponibilidad.id }}"></label>
+                    {% endif %}
                 </td>
                 <td>{{ disponibilidad.fecha }}</td>
                 <td>{{ disponibilidad.horario }}</td>
