@@ -76,10 +76,7 @@ class ReservaForm(forms.ModelForm):
         label='Horario:', widget=forms.TimeInput(attrs={'type': 'time'}))
     ruta = forms.ModelChoiceField(
         queryset=Ruta.objects.all(), label='Ruta:')
-    asiento = forms.ModelChoiceField(
-        queryset=Asientos.objects.all(), label='Asiento:')
 
     class Meta:
         model = Reserva
-        fields = ['fechaReserva', 'horarioReserva',
-                  'ruta', 'asiento']
+        fields = ['fechaReserva', 'horarioReserva', 'ruta']

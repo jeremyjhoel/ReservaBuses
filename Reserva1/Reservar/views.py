@@ -319,7 +319,7 @@ def clienteCreacion(request):
                 if request.user.is_authenticated:
                     return redirect('cliente_create')
                 else:
-                    return redirect('index')
+                    return redirect('cliente_create')
         else:
             messages.error(
                 request, 'Ha ocurrido un error al guardar los datos.')
@@ -369,40 +369,47 @@ def crear_reserva(request, pk):
         cliente = Cliente.objects.get(pk=pk)
     except Cliente.DoesNotExist:
         messages.error(request, 'El cliente no existe')
-        return redirect('index')
+        return redirect('reserva_create', cliente.id)
+
     disponibilidades = Disponibilidad.objects.all()
+    reservas = []
+
     if request.method == 'POST':
         form = ReservaForm(request.POST)
         if form.is_valid():
-            reserva = form.save(commit=False)
-            print(request.POST.get('ruta'))
-            disponibilidades = Disponibilidad.objects.filter(
-                fecha=reserva.fechaReserva, ruta=request.POST.get('ruta'))
-            # Obtener datos de otras clases para completar la reserva
-            # Ejemplo: Obtener cliente, ruta, bus y asiento
+            disponibilidad_ids = request.POST.getlist('disponibilidad_id')
+
             ruta_id = request.POST.get('ruta')
-            bus_id = request.POST.get('bus')
-            asiento_id = request.POST.get('asiento')
 
-            # ruta = Ruta.objects.get(ruta=ruta_id)
-            # bus = Bus.objects.get(patente=bus_id)
-            # asiento = Asientos.objects.get(numero=asiento_id)
+            reserva = form.save(commit=False)
+            disponibilidades = Disponibilidad.objects.filter(
+                fecha=reserva.fechaReserva, ruta=ruta_id)
+            for disponibilidad_id in disponibilidad_ids:
+                reserva = form.save(commit=False)
+                reserva.cliente = cliente
+                disponibilidad = Disponibilidad.objects.get(
+                    id=disponibilidad_id)
+                print(disponibilidad.disponible)
+                if disponibilidad.disponible:
+                    reserva.ruta = disponibilidad.ruta
+                    reserva.asiento = disponibilidad.asiento
+                    reserva.fechaReserva = disponibilidad.fecha
+                    reserva.horarioReserva = disponibilidad.horario
+                    reserva.bus = disponibilidad.bus
+                    reserva.save()
+                    print(disponibilidad_id)
+                    disponibilidad.disponible = False
+                    disponibilidad.save()
+                    print(disponibilidad.disponible)
+                    reservas.append(reserva)
+                else:
+                    messages.error(
+                        request, 'No se puede revender un horario con boletos vendidos.')
 
-            # Asignar los valores obtenidos a la reserva
-            # reserva.cliente = cliente
-            # reserva.ruta = ruta
-            # reserva.bus = bus
-            # reserva.asiento = asiento
-
-            # Guardar la reserva completa en la base de datos
-            # reserva.save()
-
-            # Redirigir a una página de confirmación
-            # return redirect('index')
     else:
         form = ReservaForm()
 
-    return render(request, 'reservas/reserva_create.html', {'form': form, 'disponibilidades': disponibilidades})
+    return render(request, 'reservas/reserva_create.html', {'form': form, 'disponibilidades': disponibilidades, 'reservas': reservas})
 
 
 class BusUpdateView(UpdateView):

@@ -9,7 +9,7 @@ class Cliente(models.Model):
     apellidoM = models.CharField(max_length=100, null=False)
     email = models.EmailField(max_length=100, null=False)
     telefono = models.CharField(max_length=20, blank=True)
-    rut = models.CharField(max_length=200, null=False, unique=True)
+    rut = models.CharField(max_length=200, null=False)
 
     def __str__(self):
         persona = str(self.nombre) + " " + self.apellidoP + \
@@ -56,7 +56,6 @@ class Asientos(models.Model):
 class Reserva(models.Model):
     fechaReserva = models.DateField(null=False)
     horarioReserva = models.TimeField(null=False)
-    cantidadPasajes = models.IntegerField(null=False)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE)
@@ -90,6 +89,10 @@ class Disponibilidad(models.Model):
     disponible = models.BooleanField()
 
     def __str__(self):
-        return str(self.horario)
+        if self.disponible:
+            ocupacion = "Desocupado"
+        else:
+            ocupacion = "Ocupado"
+        return ocupacion
 
 # Create your models here.
