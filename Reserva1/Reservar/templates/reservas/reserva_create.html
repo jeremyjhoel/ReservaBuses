@@ -11,8 +11,7 @@
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}
-    <button class="btn btn-primary" type="submit">Buscar:</button>
-    <button class="btn btn-primary" type="button">Comprar:</button>
+    <button class="btn btn-primary" type="submit">Seleccionar:</button>
     {% endbuttons %}
 
     <table class="table">
@@ -22,6 +21,7 @@
                 <th>Fecha:</th>
                 <th>Hora:</th>
                 <th>Ciudad de origen:</th>
+                <th>Ciudad de destino:</th>
                 <th>Número de asiento:</th>
                 <th>disponibilidad:</th>
             </tr>
