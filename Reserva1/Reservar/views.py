@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from .models import Cliente, Bus, Ruta, Ciudades, Asientos, Horarios_buses, Disponibilidad, Reserva
+from .models import Cliente, Bus, Ruta, Ciudades, Asientos, Horarios_buses, Disponibilidad, Reserva, Fecha, Horario
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .forms import BusForm, RutaForm, CiudadForm, Horarios_busesForm, ClienteForm, ReservaForm
+from .forms import BusForm, RutaForm, CiudadForm, Horarios_busesForm, ClienteForm, ReservaForm, FechaForm, HorarioForm
 from django.urls import reverse_lazy
 from datetime import date
 
@@ -181,38 +181,58 @@ def horiariosBusesCreacion(request):
         form = Horarios_busesForm(request.POST)
         if form.is_valid():
             horario_buses = form.save(commit=False)
-
             Hoy = date.today()
+            auxiliar = False
+            auxiliar1 = True
+            rutas = Ruta.objects.all()
 
-            if Hoy >= horario_buses.fecha or Hoy == horario_buses.fecha:
+            if Hoy >= horario_buses.fecha.fecha or Hoy == horario_buses.fecha.fecha:
                 messages.error(
                     request, 'Ha ocurrido un error al crear el horario de los buses.')
                 messages.error(
                     request, 'No se puede crear un horario para el pasado o el presente.')
                 return redirect('Horarios_buses_create')
+
             else:
-                horario_buses.save()
+                Hora_bs = Horarios_buses.objects.all()
+                for hora_b in Hora_bs:
+                    if (hora_b.horario.horario == horario_buses.horario.horario and hora_b.fecha.fecha == horario_buses.fecha.fecha) and auxiliar:
+                        messages.error(
+                            request, 'Ha ocurrido un error al crear el horario de los buses.')
+                        messages.error(
+                            request, 'No se puede crear un horario para la misma ruta al mismo tiempo')
+                        auxiliar1 = False
+                        break
+                for ruta in rutas:
+                    if (str(ruta.ciudadO.ciudad) == str(horario_buses.ciudadO) and str(ruta.ciudadD.ciudad) == str(horario_buses.ciudadD) and auxiliar1):
+                        horario_buses.save()
+                        bus = horario_buses.bus
+                        disponibilidades = []
+                        asientos = Asientos.objects.filter(bus=bus)
+                        for asiento in asientos:
+                            disponibilidad = Disponibilidad(
+                                bus=bus,
+                                asiento=asiento,
+                                ciudadO=horario_buses.ciudadO,
+                                ciudadD=horario_buses.ciudadD,
+                                horario=horario_buses.horario,
+                                fecha=horario_buses.fecha,
+                                disponible=True
+                            )
+                            disponibilidades.append(disponibilidad)
 
-                bus = horario_buses.bus
-                asientos = Asientos.objects.filter(bus=bus)
-
-                disponibilidades = []
-                for asiento in asientos:
-                    disponibilidad = Disponibilidad(
-                        bus=bus,
-                        asiento=asiento,
-                        ruta=horario_buses.ruta,
-                        horario=horario_buses.horario,
-                        fecha=horario_buses.fecha,
-                        disponible=True
-                    )
-                    disponibilidades.append(disponibilidad)
-
-                Disponibilidad.objects.bulk_create(disponibilidades)
-
-                messages.success(
-                    request, 'El horario del bus fue creado exitosamente')
-                return redirect('Horarios_buses_list')
+                        Disponibilidad.objects.bulk_create(disponibilidades)
+                        messages.success(
+                            request, 'El horario del bus fue creado exitosamente')
+                        auxiliar = False
+                        break
+                    elif auxiliar and not auxiliar1:
+                        auxiliar = True
+                if auxiliar:
+                    messages.error(
+                        request, 'Ha ocurrido un error al crear el horario de los buses')
+                    messages.error(
+                        request, 'No hay ruta disponible')
         else:
             messages.error(
                 request, 'Ha ocurrido un error al crear el horario de los buses')
@@ -393,18 +413,36 @@ def crear_reserva(request, pk):
         if form.is_valid():
             disponibilidad_ids = request.POST.getlist('disponibilidad_id')
 
-            ruta_id = request.POST.get('ruta')
-
+            rutas = Ruta.objects.all()
             reserva = form.save(commit=False)
+            horarios = Horario.objects.all()
+            fechas = Fecha.objects.all()
+            auxiliar2 = False
+            for horario in horarios:
+                if str(horario.horario) == str(reserva.horario.horario):
+                    auxiliar = horario.id
+
+            for fecha in fechas:
+                if str(fecha.fecha) == str(reserva.fecha.fecha):
+                    auxiliar1 = fecha.id
+                    print(auxiliar1)
+            for ruta in rutas:
+                if (str(ruta.ciudadO.ciudad) == str(reserva.ciudadO.ciudad)) and (str(ruta.ciudadD.ciudad) == str(reserva.ciudadD.ciudad)):
+                    auxiliar3 = reserva.ciudadO
+                    auxiliar4 = reserva.ciudadD
             disponibilidades = Disponibilidad.objects.filter(
-                fecha=reserva.fechaReserva, horario=reserva.horarioReserva, ruta=ruta_id)
+                fecha=auxiliar1, horario=auxiliar, ciudadO=auxiliar3, ciudadD=auxiliar4)
+
             for disponibilidad_id in disponibilidad_ids:
+                disponibilidades = Disponibilidad.objects.filter(
+                    fecha=auxiliar1, horario=auxiliar, ciudadO=auxiliar3, ciudadD=auxiliar4)
                 reserva = form.save(commit=False)
                 reserva.cliente = cliente
                 disponibilidad = Disponibilidad.objects.get(
                     id=disponibilidad_id)
                 if disponibilidad.disponible:
-                    reserva.ruta = disponibilidad.ruta
+                    reserva.ciudadO = disponibilidad.ciudadO
+                    reserva.ciudadD = disponibilidad.ciudadD
                     reserva.asiento = disponibilidad.asiento
                     reserva.fechaReserva = disponibilidad.fecha
                     reserva.horarioReserva = disponibilidad.horario
@@ -413,16 +451,138 @@ def crear_reserva(request, pk):
 
                     disponibilidad.disponible = False
                     disponibilidad.save()
-
                     reservas.append(reserva)
-                else:
-                    messages.error(
-                        request, 'No se puede revender un horario con boletos vendidos.')
+            else:
+                hora = False
+
+        else:
+            messages.error(
+                request, 'No se puede revender un horario con boletos vendidos.')
 
     else:
         form = ReservaForm()
 
     return render(request, 'reservas/reserva_create.html', {'form': form, 'disponibilidades': disponibilidades, 'reservas': reservas})
+
+
+def fechaCreate(request):
+    posts = Fecha.objects.all()
+
+    if request.method == 'POST':
+        post_form = FechaForm(request.POST)
+
+        if post_form.is_valid():
+            temp = post_form.save(commit=False)
+            temp.author = request.user
+            temp.save()
+            messages.success(
+                request, 'La publicación fue guardada exitosamente')
+        else:
+            messages.error(
+                request, 'Ha ocurrido un error al guardar la publicación')
+
+    else:
+        post_form = FechaForm()
+
+    fechas_form = FechaForm()
+
+    return render(request, 'fechas/fecha_create.html', {'fechas': posts, 'fechas_form': fechas_form})
+
+
+def fecha_list(request):
+    fechas = Fecha.objects.all()
+    form = FechaForm()
+
+    if request.method == 'POST':
+        form = FechaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Agregar mensajes de éxito o redireccionamiento si es necesario
+
+    context = {
+        'fechas': fechas,
+        'form': form
+    }
+
+    return render(request, 'fechas/fecha_list.html', context)
+
+
+class FechaUpdateView(UpdateView):
+    model = Fecha
+    form_class = FechaForm
+    template_name = 'fechas/fecha_update.html'
+    success_url = '/fechas/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['fecha_id'] = self.object.id
+        return context
+
+
+class FechaDeleteView(DeleteView):
+    model = Fecha
+    template_name = 'fechas/fecha_delete.html'
+    success_url = '/fechas/'
+
+
+def horarioCreate(request):
+    posts = Horario.objects.all()
+
+    if request.method == 'POST':
+        post_form = HorarioForm(request.POST)
+
+        if post_form.is_valid():
+            temp = post_form.save(commit=False)
+            temp.author = request.user
+            temp.save()
+            messages.success(
+                request, 'La publicación fue guardada exitosamente')
+        else:
+            messages.error(
+                request, 'Ha ocurrido un error al guardar la publicación')
+
+    else:
+        post_form = HorarioForm()
+
+    horario_form = HorarioForm()
+
+    return render(request, 'horarios/horario_create.html', {'horarios': posts, 'horario_form': horario_form})
+
+
+def horario_list(request):
+    horario = Horario.objects.all()
+    form = HorarioForm()
+
+    if request.method == 'POST':
+        form = HorarioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Agregar mensajes de éxito o redireccionamiento si es necesario
+
+    context = {
+        'horario': horario,
+        'form': form
+    }
+
+    return render(request, 'horarios/horario_list.html', context)
+
+
+class HorarioUpdateView(UpdateView):
+    model = Horario
+    form_class = HorarioForm
+    template_name = 'horarios/horario_update.html'
+    success_url = '/horarios/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['horario_id'] = self.object.id
+        return context
+
+
+class HorarioDeleteView(DeleteView):
+    model = Horario
+    template_name = 'horarios/horario_delete.html'
+    success_url = '/horarios/'
 
 
 class BusUpdateView(UpdateView):

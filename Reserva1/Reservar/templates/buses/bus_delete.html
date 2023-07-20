@@ -21,12 +21,12 @@
             </tr>
         </table>
 
-        <form method="POST" action="/clientes/delete/{{ cliente.id }}/" onsubmit="return confirmarEliminacion()">
+        <form method="POST" action="/buses/delete/{{ bus.id }}/" onsubmit="return confirmarEliminacion()">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">Eliminar</button>
         </form>
         <br>
-        <a href="/rutas/" class="btn btn-secondary">Volver a la lista de buses</a>
+        <a href="/buses/" class="btn btn-secondary">Volver a la lista de buses</a>
     </div>
 
     <script>

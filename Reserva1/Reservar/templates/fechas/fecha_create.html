@@ -5,7 +5,7 @@
 <html>
 
 <head>
-    <title>Crear Bus</title>
+    <title>Crear fecha</title>
     {% load bootstrap5 %}
     {% bootstrap_css %}
 
@@ -23,7 +23,7 @@
                     <div class="col-md-6">
                         <form method="POST">
                             {% csrf_token %}
-                            {% bootstrap_form bus_form %}
+                            {% bootstrap_form fechas_form %}
                             {% buttons %}
                             <button class="btn btn-primary" type="submit">Guardar</button>
                             {% endbuttons %}
@@ -49,7 +49,7 @@
             </div>
         </div>
     </div>
-    <a href="/buses/" class="btn btn-secondary mx-3">Volver a la lista de buses</a>
+    <a href="/fechas/" class="btn btn-secondary mx-3">Volver a la lista de fechas</a>
 
     {% bootstrap_javascript %}
 </body>

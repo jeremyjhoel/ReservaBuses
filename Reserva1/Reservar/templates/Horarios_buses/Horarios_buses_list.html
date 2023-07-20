@@ -8,16 +8,19 @@
     <thead>
         <tr>
             <th>Bus:</th>
-            <th>Ruta:</th>
+            <th>Ciudad de origen:</th>
+            <th>Ciudad de destino:</th>
             <th>Horario:</th>
             <th>Fecha:</th>
+            <th>Acciones:</th>
         </tr>
     </thead>
     <tbody>
         {% for Hora_b in Hora_b %}
         <tr>
             <td>{{ Hora_b.bus }}</td>
-            <td>{{ Hora_b.ruta }}</td>
+            <td>{{ Hora_b.ciudadO }}</td>
+            <td>{{ Hora_b.ciudadD }}</td>
             <td>{{ Hora_b.horario }}</td>
             <td>{{ Hora_b.fecha }}</td>
             <td>

@@ -1,6 +1,6 @@
 from django import forms
 from datetime import date
-from .models import Bus, Ruta, Ciudades, Asientos, Horarios_buses, Cliente, Reserva
+from .models import Bus, Ruta, Ciudades, Asientos, Horarios_buses, Cliente, Reserva, Disponibilidad, Horario, Fecha
 
 
 class BusForm(forms.ModelForm):
@@ -12,6 +12,26 @@ class BusForm(forms.ModelForm):
             'patente': 'Patente del bus',
             'cantidadAsientos': 'Cantidad de asientos',
         }
+
+
+class HorarioForm(forms.ModelForm):
+
+    horario = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
+
+    class Meta:
+        model = Horario
+        fields = ('horario',)
+        labels = {'horario': 'Horario:'}
+
+
+class FechaForm(forms.ModelForm):
+
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+
+    class Meta:
+        model = Fecha
+        fields = ('fecha',)
+        labels = {'fecha': 'Fecha:'}
 
 
 class CiudadForm(forms.ModelForm):
@@ -47,16 +67,18 @@ class AsientosForm(forms.ModelForm):
 
 class Horarios_busesForm(forms.ModelForm):
     bus = forms.ModelChoiceField(queryset=Bus.objects.all(), label='Bus:')
-    ruta = forms.ModelChoiceField(
-        queryset=Ruta.objects.all(), label='Ruta:')
-    horario = forms.TimeField(
-        label='Horario:', widget=forms.TimeInput(attrs={'type': 'time'}))
-    fecha = forms.DateField(
-        label='Fecha:', widget=forms.DateInput(attrs={'type': 'date'}))
+    ciudadO = forms.ModelChoiceField(
+        queryset=Ciudades.objects.all(), label='Ciudad de origen:')
+    ciudadD = forms.ModelChoiceField(
+        queryset=Ciudades.objects.all(), label='Ciudad de destino:')
+    fecha = forms.ModelChoiceField(queryset=Fecha.objects.all(),
+                                   label='Fecha:')
+    horario = forms.ModelChoiceField(queryset=Horario.objects.all(),
+                                     label='Horario:')
 
     class Meta:
         model = Horarios_buses
-        fields = ['bus', 'ruta', 'horario', 'fecha']
+        fields = ['bus', 'ciudadO', 'ciudadD', 'horario', 'fecha']
 
 
 class ClienteForm(forms.ModelForm):
@@ -70,13 +92,15 @@ class ClienteForm(forms.ModelForm):
 
 
 class ReservaForm(forms.ModelForm):
-    fechaReserva = forms.DateField(
-        label='Fecha:', widget=forms.DateInput(attrs={'type': 'date'}))
-    horarioReserva = forms.TimeField(
-        label='Horario:', widget=forms.TimeInput(attrs={'type': 'time'}))
-    ruta = forms.ModelChoiceField(
-        queryset=Ruta.objects.all(), label='Ruta:')
+    fecha = forms.ModelChoiceField(queryset=Fecha.objects.all(),
+                                   label='Fecha:')
+    horario = forms.ModelChoiceField(queryset=Horario.objects.all(),
+                                     label='Horario:')
+    ciudadO = forms.ModelChoiceField(
+        queryset=Ciudades.objects.all(), label='Ciudad de origen:')
+    ciudadD = forms.ModelChoiceField(
+        queryset=Ciudades.objects.all(), label='Ciudad de destino:')
 
     class Meta:
         model = Reserva
-        fields = ['fechaReserva', 'horarioReserva', 'ruta']
+        fields = ['fecha', 'horario', 'ciudadO', 'ciudadD']

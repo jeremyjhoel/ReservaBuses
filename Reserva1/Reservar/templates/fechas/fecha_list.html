@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lista de fechas</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+</head>
+
+<body>
+    <div class="container">
+        <h1>Lista de fechas</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fechas:</th>
+                    <th>Acciones:</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fecha in fechas %}
+                <tr>
+                    <td>{{ fecha }}</td>
+                    <td>
+                        <form method="GET" action="/fechas/delete/{{ fecha.id }}/" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                        <a href="/fechas/update/{{ fecha.id }}" class="btn btn-primary">Editar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">No hay fechas disponibles</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/fechas/create/" class="btn btn-success">Crear nueva fecha</a>
+    </div>
+</body>
+
+</html>
+
+{% endblock %}

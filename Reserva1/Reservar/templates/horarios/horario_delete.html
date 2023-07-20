@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eliminar horario</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Eliminar horario</h1>
+        <table class="table">
+            <tr>
+                <th>Horarios:</th>
+                <td>{{ horario }}</td>
+            </tr>
+        </table>
+
+        <form method="POST" action="/horarios/delete/{{ horario.id }}/" onsubmit="return confirmarEliminacion()">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+        <br>
+        <a href="/horarios/" class="btn btn-secondary">Volver a la lista de horarios</a>
+    </div>
+
+    <script>
+        function confirmarEliminacion() {
+            return confirm("¿Estás seguro de que deseas eliminar el horario?");
+        }
+    </script>
+
+</body>
+
+</html>
+
+{% endblock %}

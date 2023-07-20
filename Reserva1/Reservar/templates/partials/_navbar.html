@@ -46,9 +46,19 @@
                         <li><a class="dropdown-item" href="{% url 'ciudad_list' %}">Ciudades</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active text-white" aria-current="page"
-                        href="{% url 'Horarios_buses_list' %}">Horarios</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" id="navbarScrollingDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Horarios
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item" href="{% url 'Horarios_buses_list' %}">Horarios de buses</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'horario_list' %}">Horarios</a></li>
+                        <li><a class="dropdown-item" href="{% url 'fecha_list' %}">Fechas</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active text-white" aria-current="page"

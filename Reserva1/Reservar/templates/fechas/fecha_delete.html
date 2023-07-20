@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eliminar fecha</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Eliminar fecha</h1>
+        <table class="table">
+            <tr>
+                <th>Fecha:</th>
+                <td>{{ fecha }}</td>
+            </tr>
+        </table>
+
+        <form method="POST" action="/fechas/delete/{{ fecha.id }}/" onsubmit="return confirmarEliminacion()">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+        <br>
+        <a href="/fechas/" class="btn btn-secondary">Volver a la lista de fechas</a>
+    </div>
+
+    <script>
+        function confirmarEliminacion() {
+            return confirm("¿Estás seguro de que deseas eliminar la fecha?");
+        }
+    </script>
+
+</body>
+
+</html>
+
+{% endblock %}

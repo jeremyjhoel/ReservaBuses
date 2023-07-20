@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lista de Buses</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+</head>
+
+<body>
+    <div class="container">
+        <h1>Lista de horarios</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Horarios:</th>
+                    <th>Acciones:</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for horario in horario %}
+                <tr>
+                    <td>{{ horario }}</td>
+                    <td>
+                        <form method="GET" action="/horarios/delete/{{ horario.id }}/" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                        <a href="/horarios/update/{{ horario.id }}" class="btn btn-primary">Editar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">No hay horarios disponibles</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/horarios/create/" class="btn btn-success">Crear nuevo horario</a>
+    </div>
+</body>
+
+</html>
+
+{% endblock %}

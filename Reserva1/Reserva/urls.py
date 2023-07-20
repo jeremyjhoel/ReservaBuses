@@ -21,6 +21,8 @@ from Reservar.views import ciudad_list, ciudadCreate, CiudadDeleteView, CiudadUp
 from Reservar.views import rutaLista, rutaCreacion, rutaBorrar, rutaEdit
 from Reservar.views import horariosBusesLista, horiariosBusesCreacion, horariosBusesEdit, horariosBusesBorrar
 from Reservar.views import clienteLista, clienteCreacion, clienteBorrar, clienteEdit
+from Reservar.views import horario_list, horarioCreate, HorarioDeleteView, HorarioUpdateView
+from Reservar.views import fecha_list, fechaCreate, FechaDeleteView, FechaUpdateView
 from Reservar.views import crear_reserva
 from Reservar.views import disponibilidadLista
 
@@ -39,6 +41,18 @@ urlpatterns = [
     path('buses/create/', busCreate, name='bus_create'),
     path('buses/update/<int:pk>/', BusUpdateView.as_view(), name='bus_update'),
     path('buses/delete/<int:pk>/', BusDeleteView.as_view(), name='bus_delete'),
+
+    path('fechas/', fecha_list, name='fecha_list'),
+    path('fechas/create/', fechaCreate, name='fecha_create'),
+    path('fechas/update/<int:pk>/', FechaUpdateView.as_view(), name='fecha_update'),
+    path('fechas/delete/<int:pk>/', FechaDeleteView.as_view(), name='fecha_delete'),
+
+    path('horarios/', horario_list, name='horario_list'),
+    path('horarios/create/', horarioCreate, name='horario_create'),
+    path('horarios/update/<int:pk>/',
+         HorarioUpdateView.as_view(), name='horario_update'),
+    path('horarios/delete/<int:pk>/',
+         HorarioDeleteView.as_view(), name='horario_delete'),
 
     path('ciudades/', ciudad_list, name='ciudad_list'),
     path('ciudades/create/', ciudadCreate, name='ciudad_create'),

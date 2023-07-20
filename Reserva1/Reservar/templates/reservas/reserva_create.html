@@ -21,7 +21,7 @@
                 <th>Selección:</th>
                 <th>Fecha:</th>
                 <th>Hora:</th>
-                <th>Ruta:</th>
+                <th>Ciudad de origen:</th>
                 <th>Número de asiento:</th>
                 <th>disponibilidad:</th>
             </tr>
@@ -39,11 +39,11 @@
                 </td>
                 <td>{{ disponibilidad.fecha }}</td>
                 <td>{{ disponibilidad.horario }}</td>
-                <td>{{ disponibilidad.ruta }}</td>
+                <td>{{ disponibilidad.ciudadO.ciudad }}</td>
+                <td>{{ disponibilidad.ciudadD.ciudad }}</td>
                 <td>{{ disponibilidad.asiento }}</td>
                 <td>{{ disponibilidad }}</td>
             </tr>
-
             {% endfor %}
         </tbody>
         {% endif %}
