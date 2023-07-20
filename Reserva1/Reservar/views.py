@@ -411,13 +411,17 @@ def crear_reserva(request, pk):
     if request.method == 'POST':
         form = ReservaForm(request.POST)
         if form.is_valid():
+            auxiliar = None
+            auxiliar1 = None
+            auxiliar2 = None
+            auxiliar3 = None
             disponibilidad_ids = request.POST.getlist('disponibilidad_id')
 
             rutas = Ruta.objects.all()
             reserva = form.save(commit=False)
             horarios = Horario.objects.all()
             fechas = Fecha.objects.all()
-            auxiliar2 = False
+
             for horario in horarios:
                 if str(horario.horario) == str(reserva.horario.horario):
                     auxiliar = horario.id
@@ -428,14 +432,13 @@ def crear_reserva(request, pk):
                     print(auxiliar1)
             for ruta in rutas:
                 if (str(ruta.ciudadO.ciudad) == str(reserva.ciudadO.ciudad)) and (str(ruta.ciudadD.ciudad) == str(reserva.ciudadD.ciudad)):
-                    auxiliar3 = reserva.ciudadO
-                    auxiliar4 = reserva.ciudadD
+                    auxiliar2 = reserva.ciudadO
+                    auxiliar3 = reserva.ciudadD
             disponibilidades = Disponibilidad.objects.filter(
-                fecha=auxiliar1, horario=auxiliar, ciudadO=auxiliar3, ciudadD=auxiliar4)
+                fecha=auxiliar1, horario=auxiliar, ciudadO=auxiliar2, ciudadD=auxiliar3)
 
             for disponibilidad_id in disponibilidad_ids:
-                disponibilidades = Disponibilidad.objects.filter(
-                    fecha=auxiliar1, horario=auxiliar, ciudadO=auxiliar3, ciudadD=auxiliar4)
+
                 reserva = form.save(commit=False)
                 reserva.cliente = cliente
                 disponibilidad = Disponibilidad.objects.get(
@@ -453,7 +456,8 @@ def crear_reserva(request, pk):
                     disponibilidad.save()
                     reservas.append(reserva)
             else:
-                hora = False
+                messages.error(
+                    request, 'Ha ocurrido un eror')
 
         else:
             messages.error(
