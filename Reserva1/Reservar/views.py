@@ -335,6 +335,24 @@ def clienteCreacion(request):
 
         if cliente_form.is_valid():
             Rut = str(cliente.rut)
+            correo = cliente.email
+            if '@' in correo:
+                auxiliar = correo[correo.find('@'):]
+                if ('.' in auxiliar):
+                    auxiliar1 = auxiliar[auxiliar.find('.'):]
+                    if not (len(auxiliar1) != 0):
+                        messages.error(
+                            request, 'Ha ocurrido un error no se ha ingresado un correo electrónico válido')
+                        return redirect('cliente_create')
+                else:
+                    messages.error(
+                        request, 'Ha ocurrido un error no se ha ingresado un correo electrónico válido')
+                    return redirect('cliente_create')
+            else:
+                messages.error(
+                    request, 'Ha ocurrido un error no se ha ingresado un correo electrónico válido')
+                return redirect('cliente_create')
+
             for clientes in Tclientes:
                 if cliente.rut == clientes.rut:
                     return redirect('reserva_create', clientes.id)
