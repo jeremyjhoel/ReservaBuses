@@ -1,18 +1,9 @@
 {% extends 'layout.html' %}
+
 {% block content %}
-
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Lista de Buses</title>
-    {% load bootstrap5 %}
-    {% bootstrap_css %}
-</head>
-
-<body>
-    <div class="container">
-        <h1>Lista de Buses</h1>
+<div class="container my-4">
+    <h1 class="text-center">Lista de Buses</h1>
+    <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
@@ -27,24 +18,23 @@
                     <td>{{ bus.patente }}</td>
                     <td>{{ bus.cantidadAsientos }}</td>
                     <td>
-                        <form method="GET" action="/buses/delete/{{ bus.id }}/" style="display: inline;">
+                        <form method="GET" action="/buses/delete/{{ bus.id }}" style="display: inline;">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                            <button class="btn btn-danger" type="submit">Eliminar</button>
                         </form>
-                        <a href="/buses/update/{{ bus.id }}" class="btn btn-primary">Editar</a>
+                        <a class="btn btn-primary" href="/buses/update/{{ bus.id }}">Editar</a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="3">No hay buses disponibles</td>
+                    <td colspan="3" class="text-center">No hay buses disponibles</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <a href="/buses/create/" class="btn btn-success">Crear nuevo bus</a>
     </div>
-</body>
-
-</html>
-
+    <div class="text-center">
+        <a class="btn btn-success mt-3" href="/buses/create/">Crear nuevo bus</a>
+    </div>
+</div>
 {% endblock %}

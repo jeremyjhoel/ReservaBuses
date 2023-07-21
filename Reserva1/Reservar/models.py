@@ -69,7 +69,6 @@ class Horarios_buses(models.Model):
         Ciudades, related_name='Horarios_buses_origen', on_delete=models.CASCADE)
     ciudadD = models.ForeignKey(
         Ciudades, related_name='Horarios_buses_destino', on_delete=models.CASCADE)
-    bus = models.ForeignKey(Bus, on_delete=models.CASCADE)
     horario = models.ForeignKey(
         Horario, on_delete=models.CASCADE, related_name='Horarios_buses_horario')
     fecha = models.ForeignKey(
