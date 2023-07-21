@@ -20,10 +20,78 @@
             <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-10 offset-1">
                 <div class="text-center mt-5">
                     <h1 class="mb-4">Bienvenido al Sitio de Reservas</h1>
-                    <p class="lead">Reserva tu pasaje de bus ahora mismo</p>
+                    <p class="h4">Reserva tu pasaje de bus ahora mismo para:</p>
+                    {% for ruta in ruta %}
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 text-center">
+                                <p class="h4 mt-4 mb-2 text-info text-uppercase"><strong>{{ ruta.ciudadO }}</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <a>Lo lamentamos, no hay destinos.</a>
+                    {% endfor %}
+                    <br>
                     <a href="/clientes/create/" class="btn btn-primary btn-lg">Reservar pasaje</a>
                 </div>
             </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="container">
+        <div class="row">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Bus:</th>
+                        <th>Ciudad de origen:</th>
+                        <th>Ciudad de destino:</th>
+                        <th>Horario:</th>
+                        <th>Fecha:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for horario in horarios %}
+                    <tr>
+                        <td>{{ horario.bus }}</td>
+                        <td>{{ horario.ciudadO }}</td>
+                        <td>{{ horario.ciudadD }}</td>
+                        <td>{{ horario.horario }}</td>
+                        <td>{{ horario.fecha }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No hay horarios de buses disponibles</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Ciudad de Origen</th>
+                        <th>Ciudad de Destino</th>
+                        <th>Tiempo Estimado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ruta in ruta %}
+                    <tr>
+                        <td>{{ ruta.ciudadO }}</td>
+                        <td>{{ ruta.ciudadD }}</td>
+                        <td>{{ ruta.tiempoEstimado }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No hay rutas disponibles</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     {% endif %}

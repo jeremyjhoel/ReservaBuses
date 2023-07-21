@@ -10,8 +10,9 @@ from datetime import date
 
 
 def index(request):
-
-    return render(request, 'index.html')
+    ruta = Ruta.objects.all()
+    horarios = Horarios_buses.objects.all()
+    return render(request, 'index.html', {'ruta': ruta, 'horarios': horarios})
 
 
 def rutaLista(request):
